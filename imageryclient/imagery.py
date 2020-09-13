@@ -80,17 +80,15 @@ class ImageryClient(object):
         CloudVolume path to an imagery source, by default None
     segmentation_source : str, optional
         CloudVolume path to a segmentation source, by default None
-    server_address : str, optional
-        Address of an InfoService host, by default None. If none, defaults to
-        https://www.dynamicannotationframework.com
     datastack_name : str, optional
         Datastack name to lookup information for in the InfoService, by default None
-    base_resolution : array-like or 'imagery' or 'segmentation', optional
-        Sets the voxel resolution that bounds will be entered in, by default [4, 4, 40].
-        Optionally, "imagery" or "segmentation" use the mip 0 values of the associated
-        cloudvolumes.
-    graphene_segmentation : bool, optional
-        If true, use the graphene segmentation. If false, use the flat segmentation. By default True.
+    server_address : str, optional
+        Address of an InfoService host, by default None. If none, uses defaults in
+        the annotationframeworkclient.
+    base_resolution : array-like or 'image' or 'segmentation', optional
+        Sets the voxel resolution that bounds will be entered in, by default 'image'.
+        Literal resolutions will be followed, while "image" or "segmentation" use the
+        mip 0 values of the associated cloudvolumes.
     table_name : str, optional
         Name of the chunkedgraph table (if used), by default None
     image_mip : int, optional
@@ -102,6 +100,13 @@ class ImageryClient(object):
         If False, no segmentation cloudvolume is initialized. By default True
     imagery : bool, optional
         If False, no imagery cloudvolume is initialized. By default True
+    framework_client : annotationframeworkclient.FrameworkClient, optional
+        A pre-initialized Framework client to be used instead of initializing a new one.
+    auth_token : str or None, optional
+        Auth token to use for cloudvolume. If None, uses the default values from the FrameworkClient. Default is None.
+    timestamp : datetime.datetime or None,
+        Fixed timestamp to use for segmentation lookups. If None, defaults to the present time
+        when each function is run. Default is None.
     """
 
     def __init__(self,
@@ -109,7 +114,7 @@ class ImageryClient(object):
                  segmentation_source=None,
                  datastack_name=None,
                  server_address=None,
-                 base_resolution=[4, 4, 40],
+                 base_resolution='image',
                  image_mip=0,
                  segmentation_mip=0,
                  segmentation=True,
