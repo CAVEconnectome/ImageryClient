@@ -1,0 +1,8 @@
+scipy
+numpy
+annotationframeworkclient
+cloud-volume
+Pillow
+fastremap
+tqdm
+imageio
