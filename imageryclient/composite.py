@@ -1,6 +1,42 @@
 import numpy as np
 from PIL import Image
 from . import utils
+from seaborn import husl_palette, hls_palette, color_palette
+
+
+def discrete_colors(segs, palette='husl', h=0.01, l=0.6, s=1):
+    """Generate discrete colors for segmentations from a palette
+    generator. Defaults to perceptually uniform differences with
+    high saturation.
+
+    Parameters
+    ----------
+    segs : list or dict
+        Dict or list of segmentations to provide colors for.
+    palette : 'husl', 'hls', or str, optional
+        Which palette system to use, by default 'husl'. Will
+        accept anything allowed by seaborn color_palette function.
+    h : float, optional
+        Hue value if husl or hls palettes are used, by default 0.01
+    l : float, optional
+        Lightness if husl or hls palettes are used, by default 0.6
+    s : int, optional
+        Saturation if husl or hls palettes are used, by default 1
+
+    Returns
+    -------
+    List or dict
+        List or dict with one color per segmentation.
+    """
+    if palette == 'husl':
+        colors = husl_palette(len(segs), h=h, s=s, l=l)
+    elif palette == 'hls':
+        colors = hls_palette(len(segs), h=h, s=s, l=l)
+    else:
+        colors = color_palette(n_colors=len(segs), palette=palette)
+    if isinstance(segs, dict):
+        colors = {k: c for k, c in zip(segs.keys(), colors)}
+    return colors
 
 
 def stack_images(images, direction='horizontal', spacing=10):
