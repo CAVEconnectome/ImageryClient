@@ -6,3 +6,4 @@ Pillow
 fastremap
 tqdm
 imageio
+seaborn
