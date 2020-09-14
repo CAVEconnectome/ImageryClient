@@ -4,6 +4,13 @@ This project attempts to follow [Semantic Versioning](https://semver.org) and us
 But I make mistakes sometimes.
 
 <!-- ## Unreleased -->
+
+## [0.2.2] — 2020-09-13
+
+### Fixed
+
+- Adding long description for pypi
+
 ## [0.2.1] — 2020-09-13
 
 ### Fixed

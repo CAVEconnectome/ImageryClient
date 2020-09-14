@@ -23,10 +23,15 @@ def find_version(*file_paths):
 with open('requirements.txt', 'r') as f:
     required = f.read().splitlines()
 
+with open('short_readme.md', 'r') as f:
+    long_description = f.read()
+
 setup(
     version=find_version("imageryclient", "__init__.py"),
     name='imageryclient',
     description='Front end tools for composite images for EM connectomics',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Casey Schneider-Mizell',
     author_email='caseysm@gmail.com',
     url='https://github.com/ceesem/ImageryClient',
