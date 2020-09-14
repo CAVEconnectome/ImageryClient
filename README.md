@@ -101,7 +101,9 @@ If the lowest mip data in each differs in resolution, the lower resolution data 
 Root ids and split segmentations can be optionally specified. This is the best option if your primary goal is overlay images.
 
 ```python
-image, segs = img_client.image_and_segmentation_cutout(bounds, split_segmentations=True, root_ids=root_ids)
+image, segs = img_client.image_and_segmentation_cutout(bounds,
+                                            split_segmentations=True,
+                                            root_ids=root_ids)
 ```
 
 ## Producing overlays
@@ -154,7 +156,14 @@ Additionally, setting `merge_outline` to False will not omit outlines in places 
 Lots of different effects are possible!
 
 ```python
-ic.composite_overlay(segs, imagery=image, outline=True, alpha=1, width=3, merge_outline=False, side='in', colors=colors)
+ic.composite_overlay(segs,
+                     imagery=image,
+                     outline=True,
+                     alpha=1,
+                     width=3,
+                     merge_outline=False,
+                     side='in',
+                     colors=colors)
 ```
 
 ![outline 1](example_images/seg_outline_1.png)
@@ -175,7 +184,8 @@ bounds_3d = ic.bounds_from_center(ctr, delx=width, dely=width, delz=z_slices)
 
 image, segs = img_client.image_and_segmentation_cutout(bounds_3d, split_segmentations=True)
 
-overlays = ic.composite_overlay(segs, imagery=image, alpha=0.3, width=3, merge_outline=False, side='in')
+overlays = ic.composite_overlay(segs, imagery=image, alpha=0.3, width=3,
+                                merge_outline=False, side='in')
 
 overlays[0]
 ```
