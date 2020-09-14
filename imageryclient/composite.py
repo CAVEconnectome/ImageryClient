@@ -3,8 +3,18 @@ from PIL import Image
 from . import utils
 from seaborn import husl_palette, hls_palette, color_palette
 
+DEFAULT_PALETTE = 'husl'
+DEFAULT_H = 0.01
+DEFAULT_L = 0.65
+DEFAULT_S = 1.0
 
-def discrete_colors(segs, palette='husl', h=0.01, l=0.6, s=1):
+
+def discrete_colors(segs,
+                    palette=DEFAULT_PALETTE,
+                    h=DEFAULT_H,
+                    l=DEFAULT_L,
+                    s=DEFAULT_S,
+                    ):
     """Generate discrete colors for segmentations from a palette
     generator. Defaults to perceptually uniform differences with
     high saturation.
@@ -201,8 +211,8 @@ def _composite_overlay_single(masks,
         return composite_frames
 
 
-def composite_overlay(masks,
-                      colors,
+def composite_overlay(segs,
+                      colors=None,
                       alpha=0.2,
                       imagery=None,
                       outline=False,
@@ -211,6 +221,10 @@ def composite_overlay(masks,
                       width=10,
                       side='out',
                       dim=2,
+                      palette=DEFAULT_PALETTE,
+                      h=DEFAULT_H,
+                      l=DEFAULT_L,
+                      s=DEFAULT_S,
                       ):
     """Make a colored composite overlay for a 3d mask from an iterable of masks.
 
@@ -218,9 +232,9 @@ def composite_overlay(masks,
     ----------
     masks : list-like or dict
         Iterable of masked images of the same size. If a dict, colors must be a dict as well.
-    colors : list-like or dict
+    colors : list-like, dict, or None
         Iterable of RGB colors of the same size as masks. If a dict, masks must also be a dict and colors
-        must have all keys in masks.
+        must have all keys in masks. If None, uses `discrete_colors` to generate colors.
     alpha : float, optional
         Alpha value for the overlay
     imagery : PIL.Image.Image or None, optional
@@ -245,11 +259,14 @@ def composite_overlay(masks,
         Image or list of composite overlay images, optionally overlaid over provided imagery. List or single image
         is determined based on segmentation arrays being 2 or 3 dimensional.
     """
-    n_dim = len(utils.get_first(masks).shape)
+    if colors is None:
+        colors = discrete_colors(segs, palette, h, l, s)
+
+    n_dim = len(utils.get_first(segs).shape)
     if n_dim > 2:
-        n_frames = utils.get_first(masks).shape[dim]
+        n_frames = utils.get_first(segs).shape[dim]
     else:
-        return _composite_overlay_single(masks,
+        return _composite_overlay_single(segs,
                                          colors,
                                          alpha=alpha,
                                          imagery=imagery,
@@ -263,7 +280,7 @@ def composite_overlay(masks,
     overlay_images = []
     for ii in range(n_frames):
         frame_masks, frame_imagery = utils.flatten_data(
-            ii, masks, imagery, dim)
+            ii, segs, imagery, dim)
         img = _composite_overlay_single(frame_masks,
                                         colors,
                                         alpha=alpha,
