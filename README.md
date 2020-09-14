@@ -206,3 +206,13 @@ ic.stack_images(overlays)
 While the ImageryClient was designed to work specifically with the [AnnotationFrameworkClient](https://github.com/seung-lab/AnnotationFrameworkClient)
 and its associated suite of services, it should work with any cloudvolume project.
 
+However, if you are working within an AnnotationFrameworkClient-compatible project, aligned collections of imagery and segmentation are combined into so-called "datastacks".
+For the ImageryClient, the name of the datastack can be used instead of specifying cloudpaths directly.
+Authentication tokens for secure projects are handled through through cloudvolume but can be overridden by the FrameworkClient, depending on how you've defined your set up.
+Datastacks are recommended if it's possible that imagery and segmentation will change over the course of your work, as the FrameworkClient can remain pointed toward the appropriate targets.
+
+```python
+datastack_name = 'my_project'
+img_client = ic.ImageryClient(datastack_name=datastack_name)
+```
+
