@@ -24,7 +24,7 @@ img_src = 'precomputed://gs://neuroglancer-public-data/kasthuri2011/image_color_
 seg_src = 'precomputed://gs://neuroglancer-public-data/kasthuri2011/ground_truth'
 
 img_client = ic.ImageryClient(image_source=img_src,
-                                      segmentation_source=seg_src)
+                              segmentation_source=seg_src)
 ```
 
 ### Bounds
