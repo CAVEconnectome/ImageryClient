@@ -4,8 +4,13 @@ This project attempts to follow [Semantic Versioning](https://semver.org) and us
 But I make mistakes sometimes.
 
 <!-- ## Unreleased -->
+## [0.2.1] — 2020-09-13
 
-## [0.2.0] — 2020-09-12
+### Fixed
+
+- Added seaborn to requirements
+
+## [0.2.0] — 2020-09-13
 
 ### Added
 
