@@ -102,8 +102,8 @@ Root ids and split segmentations can be optionally specified. This is the best o
 
 ```python
 image, segs = img_client.image_and_segmentation_cutout(bounds,
-                                            split_segmentations=True,
-                                            root_ids=root_ids)
+                                                       split_segmentations=True,
+                                                       root_ids=root_ids)
 ```
 
 ## Producing overlays
