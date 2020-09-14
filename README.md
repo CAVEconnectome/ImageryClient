@@ -11,6 +11,9 @@ Moreover, imagery and segmentation have data that means intrensically different 
 Values in imagery indicate pixel intensity in order to produce a picture, while values in segmentation indicate the object id at a given location.
 ImageryClient acts as a front end for making aligned cutouts from multiple cloudvolume sources, splitting segmentations into masks for each object, and more.
 
+We make use of [Numpy arrays](http://numpydoc.readthedocs.io) and [Pillow Images](https://pillow.readthedocs.io/) to represent data.
+Please see the appropriate documentation for information about saving data to image files and more.
+
 ## How to use ImageryClient
 
 Here, we will use the ImageryClient to get some data from the [Kasthuri et al. 2014 dataset](https://neuroglancer-demo.appspot.com/fafb.html#!gs://fafb-ffn1/main_ng.json) hosted by Google.
