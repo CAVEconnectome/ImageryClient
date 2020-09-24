@@ -1,1 +1,2 @@
 include requirements.txt
+include short_readme.md
