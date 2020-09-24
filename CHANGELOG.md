@@ -5,6 +5,12 @@ But I make mistakes sometimes.
 
 <!-- ## Unreleased -->
 
+## [0.2.3] - 2020-09-24
+
+### Fixed
+
+- Fix install bug
+
 ## [0.2.2] — 2020-09-13
 
 ### Fixed
