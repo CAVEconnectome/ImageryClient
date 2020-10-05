@@ -577,11 +577,12 @@ class ImageryClient(object):
             If True, prints the progress, by default False
         """
         if precomputed_image is None:
-            img = self.image_cutout(bounds, mip)
+            img = self.image_cutout(
+                bounds, mip=mip, voxel_dimensions=voxel_dimensions)
         else:
             img = precomputed_image
         save_image_slices(filename_prefix, 'imagery', img, slice_axis,
-                          'imagery', verbose=verbose, exact=exact, **kwargs)
+                          'imagery', verbose=verbose,  **kwargs)
         pass
 
     def save_segmentation_masks(self, filename_prefix, bounds=None, mip=None, root_ids='all', precomputed_masks=None,
@@ -618,7 +619,7 @@ class ImageryClient(object):
         """
         if precomputed_masks is None:
             seg_dict = self.split_segmentation_cutout(
-                bounds=bounds, root_ids=root_ids, mip=mip, exact=exact, include_null_root=include_null_root)
+                bounds=bounds, root_ids=root_ids, mip=mip, voxel_dimensions=voxel_dimensions, include_null_root=include_null_root)
         else:
             seg_dict = precomputed_masks
 
@@ -630,6 +631,7 @@ class ImageryClient(object):
 
     def save_image_and_segmentation_masks(self, filename_prefix, bounds=None, image_mip=None, segmentation_mip=None,
                                           root_ids='all', resize=True, precomputed_data=None, slice_axis=2,
+                                          image_voxel_dimensions=None, segmentation_voxel_dimensions=None,
                                           segmentation_colormap={}, include_null_root=False, verbose=False, **kwargs):
         """Save aligned and scaled imagery and segmentation mask cutouts as pngs. Kwargs are passed to imageio.imwrite.
 
@@ -669,8 +671,8 @@ class ImageryClient(object):
         if precomputed_data is not None:
             img, seg_dict = precomputed_data
         else:
-            img, seg_dict = self.image_and_segmentation_cutout(bounds=bounds, image_mip=image_mip, segmentation_mip=segmentation_mip,
-                                                               root_ids=root_ids, resize=resize, include_null_root=include_null_root, split_segmentations=True, verbose=verbose)
+            img, seg_dict = self.image_and_segmentation_cutout(bounds=bounds, image_mip=image_mip, segmentation_mip=segmentation_mip, image_voxel_dimensions=image_voxel_dimensions,
+                                                               segmentation_voxel_dimensions=segmentation_voxel_dimensions, root_ids=root_ids, resize=resize, include_null_root=include_null_root, split_segmentations=True, verbose=verbose)
 
         self.save_imagery(filename_prefix, precomputed_image=img,
                           slice_axis=slice_axis, verbose=verbose, **kwargs)
