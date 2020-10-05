@@ -12,14 +12,8 @@ import imageio
 from . import utils
 
 
-def _patch_cloudvolume_auth(token):
-    # This is a a hack at the moment, but we will replace the monkey patching when cloudvolume can properly accept tokens.
-    global cv
-    cv.datasource.graphene.metadata.chunkedgraph_credentials = {'token': token}
-
-
 def bounds_from_center(ctr, width=0, height=0, depth=0):
-    """Generate bounds from a center point and halfwidths in each direction
+    """Generate bounds from a center point and dimensions for each direction
 
     Parameters
     ----------
@@ -138,9 +132,9 @@ class ImageryClient(object):
         else:
             self._client = None
 
-        if self.client is not None:
-            auth_token = self.client.auth.token
-        _patch_cloudvolume_auth(auth_token)
+        self._auth_token = None
+        if auth_token is not None:
+            self._auth_token = auth_token
 
         if isinstance(base_resolution, str):
             if base_resolution in ['image', 'segmentation']:
@@ -163,6 +157,15 @@ class ImageryClient(object):
     @property
     def client(self):
         return self._client
+
+    @property
+    def token(self):
+        if self._auth_token is not None:
+            return self._auth_token
+        elif self.client is None:
+            return None
+        else:
+            return self.client.auth.token
 
     @property
     def timestamp(self):
@@ -218,7 +221,8 @@ class ImageryClient(object):
                                           bounded=False,
                                           fill_missing=True,
                                           progress=False,
-                                          use_https=True)
+                                          use_https=True,
+                                          secrets=self.token)
         return self._img_cv
 
     @property
@@ -234,7 +238,8 @@ class ImageryClient(object):
                                           use_https=True,
                                           fill_missing=True,
                                           bounded=False,
-                                          progress=False)
+                                          progress=False,
+                                          secrets=self.token)
         return self._seg_cv
 
     def _scale_nm_to_voxel(self, xyz_nm, mip, use_cv):
@@ -254,11 +259,16 @@ class ImageryClient(object):
         return bounds_mip_voxel
 
     def _bounds_to_slices(self, bounds):
-        lbounds = np.min(bounds, axis=0)
-        ubounds = np.max(bounds, axis=0)+1
-        xslice, yslice, zslice = (slice(lbounds[ii], ubounds[ii]) if ubounds[ii] > lbounds[ii]+1
-                                  else lbounds[ii] for ii in range(3))
-        return xslice, yslice, zslice
+        return cv.Bbox(bounds[0], bounds[1])
+
+    def _compute_bounds(self, bounds, mip, use_cv, voxel_dimensions):
+        bounds_vx = self._rescale_for_mip(bounds, mip, use_cv=use_cv)
+        if voxel_dimensions is not None:
+            width, height, depth = voxel_dimensions
+            bounds_vx = bounds_from_center(np.atleast_2d(bounds_vx)[0],
+                                           width=width, height=height, depth=depth)
+        bbox = self._bounds_to_slices(bounds_vx)
+        return bbox
 
     def image_cutout(self, bounds, voxel_dimensions=None, mip=None):
         """Get an image cutout for a certain location or set of bounds and a mip level.
@@ -285,14 +295,8 @@ class ImageryClient(object):
 
         if mip is None:
             mip = self._base_imagery_mip
-
-        bounds_vx = self._rescale_for_mip(bounds, mip, use_cv='image')
-        if voxel_dimensions is not None:
-            width, height, depth = voxel_dimensions
-            bounds_vx = bounds_from_center(np.atleast_2d(
-                bounds_vx)[0], width=width, height=height, depth=depth)
-        slices = self._bounds_to_slices(bounds_vx)
-        return np.array(np.squeeze(self.image_cv.download(slices, mip=mip)))
+        bbox = self._compute_bounds(bounds, mip, 'image', voxel_dimensions)
+        return np.array(np.squeeze(self.image_cv.download(bbox, mip=mip)))
 
     def segmentation_cutout(self, bounds, root_ids='all', mip=None, voxel_dimensions=None,  verbose=False):
         """Get a cutout of the segmentation imagery for some or all root ids between set bounds.
@@ -324,21 +328,18 @@ class ImageryClient(object):
         if mip is None:
             mip = self._base_segmentation_mip
 
-        bounds_vx = self._rescale_for_mip(bounds, mip, use_cv='segmentation')
-        if voxel_dimensions is not None:
-            width, height, depth = voxel_dimensions
-            bounds_vx = bounds_from_center(np.atleast_2d(
-                bounds_vx)[0], width=width, height=height, depth=depth)
+        bbox = self._compute_bounds(
+            bounds, mip, 'segmentation', voxel_dimensions)
 
         if isinstance(root_ids, str):
             if root_ids == 'all':
                 seg_cutout = self.segmentation_cv.download(
-                    slices, agglomerate=True, mip=mip, timestamp=self.timestamp)
+                    bbox, agglomerate=True, mip=mip, timestamp=self.timestamp)
                 return np.array(np.squeeze(seg_cutout))
             else:
                 raise ValueError('root_ids must be None, list, or "all')
         else:
-            return np.array(np.squeeze(self.segmentation_cv.download(slices, segids=root_ids, mip=mip, timestamp=self.timestamp)))
+            return np.array(np.squeeze(self.segmentation_cv.download(bbox, segids=root_ids, mip=mip, timestamp=self.timestamp)))
 
     def split_segmentation_cutout(self, bounds, root_ids='all', mip=None, include_null_root=False, voxel_dimensions=None, verbose=False):
         """Generate segmentation cutouts with a single binary mask for each root id, organized as a dict with keys as root ids and masks as values.
@@ -395,7 +396,7 @@ class ImageryClient(object):
 
     def image_and_segmentation_cutout(self, bounds, image_mip=None, segmentation_mip=None, root_ids='all', resize=True,
                                       split_segmentations=False, include_null_root=False, image_voxel_dimensions=None,
-                                      verbose=False):
+                                      segmentation_voxel_dimensions=None, verbose=False):
         """Download aligned and scaled imagery and segmentation data at a given resolution.
 
         Parameters
@@ -418,9 +419,14 @@ class ImageryClient(object):
             an array with root_ids (using segmentation_cutout), by default False
         include_null_root : bool, optional
             If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.
-        voxel_dimensons : array or None, optional
-            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
-            as the center. Note that this will not generate aligned data if the image and segmentation mips are not the same.
+        image_voxel_dimensons : array or None, optional
+            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions of the image cutout. In this case, bounds is treated
+            as the center. Note that this will not generate aligned data if the image and segmentation mips are not the same. Note that if explicit
+            image and segmentation voxel dimensions are used, both must be set and care must be taken to ensure they align.
+        segmentation_voxel_dimensions : array or None.
+            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions of the segmentation cutout. In this case, bounds is treated
+            as the center. Note that this will not generate aligned data if the image and segmentation mips are not the same. Note that if explicit
+            image and segmentation voxel dimensions are used, both must be set and care must be taken to ensure they align.
         verbose : bool, optional
             If True, prints statements about the progress as it goes. By default, False.
 
@@ -449,7 +455,8 @@ class ImageryClient(object):
         if verbose:
             print('Downloading images')
         img = self.image_cutout(bounds=bounds,
-                                mip=image_mip)
+                                mip=image_mip,
+                                voxel_dimensions=image_voxel_dimensions)
         img_shape = img.shape
 
         if verbose:
@@ -458,7 +465,7 @@ class ImageryClient(object):
             seg = self.segmentation_cutout(bounds,
                                            root_ids=root_ids,
                                            mip=segmentation_mip,
-                                           voxel_dimensions=voxel_dimensions,
+                                           voxel_dimensions=segmentation_voxel_dimensions,
                                            verbose=verbose)
             seg_shape = seg.shape
         else:
@@ -466,7 +473,7 @@ class ImageryClient(object):
                                                  root_ids=root_ids,
                                                  mip=segmentation_mip,
                                                  include_null_root=include_null_root,
-                                                 voxel_dimensions=voxel_dimensions,
+                                                 voxel_dimensions=segmentation_voxel_dimensions,
                                                  verbose=verbose)
             if len(seg) > 0:
                 seg_shape = seg[list(seg.keys())[0]].shape
@@ -544,7 +551,7 @@ class ImageryClient(object):
                 self.segmentation_cv.mip_resolution(mip))] = mip
         return image_resolution, segmentation_resolution
 
-    def save_imagery(self, filename_prefix, bounds=None, mip=None, precomputed_image=None, slice_axis=2, exact=False, verbose=False, **kwargs):
+    def save_imagery(self, filename_prefix, bounds=None, mip=None, precomputed_image=None, slice_axis=2, voxel_dimensions=None, verbose=False, **kwargs):
         """Save queried or precomputed imagery to png files.
 
         Parameters
@@ -569,12 +576,12 @@ class ImageryClient(object):
             img = self.image_cutout(bounds, mip)
         else:
             img = precomputed_image
-        utils._save_image_slices(filename_prefix, 'imagery', img, slice_axis,
-                                 'imagery', verbose=verbose, exact=exact, **kwargs)
-        return
+        save_image_slices(filename_prefix, 'imagery', img, slice_axis,
+                          'imagery', verbose=verbose, exact=exact, **kwargs)
+        pass
 
     def save_segmentation_masks(self, filename_prefix, bounds=None, mip=None, root_ids='all', precomputed_masks=None,
-                                slice_axis=2, include_null_root=False, segmentation_colormap={}, verbose=False, exact=False, **kwargs):
+                                slice_axis=2, include_null_root=False, segmentation_colormap={}, verbose=False, voxel_dimensions=None, **kwargs):
         """Save queried or precomputed segmentation masks to png files. Additional kwargs are passed to imageio.imwrite.
 
         Parameters
@@ -613,9 +620,9 @@ class ImageryClient(object):
 
         for root_id, seg_mask in seg_dict.items():
             suffix = f'root_id_{root_id}'
-            utils._save_image_slices(filename_prefix, suffix, seg_mask, slice_axis, 'mask',
-                                     color=segmentation_colormap.get(root_id, None), verbose=verbose, **kwargs)
-        return
+            save_image_slices(filename_prefix, suffix, seg_mask, slice_axis, 'mask',
+                              color=segmentation_colormap.get(root_id, None), verbose=verbose, **kwargs)
+        pass
 
     def save_image_and_segmentation_masks(self, filename_prefix, bounds=None, image_mip=None, segmentation_mip=None,
                                           root_ids='all', resize=True, precomputed_data=None, slice_axis=2,
@@ -665,4 +672,4 @@ class ImageryClient(object):
                           slice_axis=slice_axis, verbose=verbose, **kwargs)
         self.save_segmentation_masks(filename_prefix, precomputed_masks=seg_dict, slice_axis=slice_axis,
                                      segmentation_colormap=segmentation_colormap, verbose=verbose, **kwargs)
-        return
+        pass
