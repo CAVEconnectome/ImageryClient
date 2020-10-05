@@ -2,7 +2,6 @@ import fastremap
 import numpy as np
 import tqdm
 import imageio
-from annotationframeworkclient.frameworkclient import FrameworkClient
 import cloudvolume as cv
 from scipy import ndimage
 from functools import partial
@@ -19,21 +18,21 @@ def _patch_cloudvolume_auth(token):
     cv.datasource.graphene.metadata.chunkedgraph_credentials = {'token': token}
 
 
-def bounds_from_center(ctr, delx=0, dely=0, delz=0):
+def bounds_from_center(ctr, width=0, height=0, depth=0):
     """Generate bounds from a center point and halfwidths in each direction
 
     Parameters
     ----------
     ctr : array-like
         x,y,z coordinates of the center of the bounds in voxel dimensions.
-    delx : int, optional 
-        Distance from the center to the edge of the box in the x direction.
+    width: int, optional 
+        Width of the box in the x direction.
         Default is 0.
-    dely : int, optional 
-        Distance from the center to the edge of the box in the y direction.
+    height: int, optional 
+        Height of the box in the y direction.
         Default is 0.
-    delz : int, optional 
-        Distance from the center to the edge of the box in the z direction.
+    depth: int, optional 
+        Depth of the box in the z direction.
         Default is 0.
 
     Returns
@@ -41,8 +40,8 @@ def bounds_from_center(ctr, delx=0, dely=0, delz=0):
     array
         2x3 array of lower and upper bounds (in that order).
     """
-    xl = ctr - np.array([delx, dely, delz])
-    xh = ctr + np.array([delx, dely, delz])
+    xl = ctr - np.array([width//2, height//2, depth//2])
+    xh = xl + np.array([width, height, depth])
     return np.array([xl, xh])
 
 
@@ -129,6 +128,11 @@ class ImageryClient(object):
         if framework_client is not None:
             self._client = framework_client
         elif datastack_name is not None:
+            try:
+                from annotationframeworkclient.frameworkclient import FrameworkClient
+            except:
+                raise ImportError(
+                    'You need to install annotationframeworkclient to use this functionality')
             self._client = FrameworkClient(
                 datastack_name, server_address=server_address)
         else:
@@ -212,6 +216,7 @@ class ImageryClient(object):
             self._img_cv = cv.CloudVolume(self.image_source,
                                           mip=self._base_imagery_mip,
                                           bounded=False,
+                                          fill_missing=True,
                                           progress=False,
                                           use_https=True)
         return self._img_cv
@@ -227,6 +232,7 @@ class ImageryClient(object):
             self._seg_cv = cv.CloudVolume(self.segmentation_source,
                                           mip=self._base_segmentation_mip,
                                           use_https=True,
+                                          fill_missing=True,
                                           bounded=False,
                                           progress=False)
         return self._seg_cv
@@ -254,14 +260,18 @@ class ImageryClient(object):
                                   else lbounds[ii] for ii in range(3))
         return xslice, yslice, zslice
 
-    def image_cutout(self, bounds, mip=None):
+    def image_cutout(self, bounds, voxel_dimensions=None, mip=None):
         """Get an image cutout for a certain location or set of bounds and a mip level.
 
         Parameters
         ----------
-        bounds : 2 x 3 list of ints
-            A list of a lower bound and upper bound point to bound the cutout in units of voxels in a resolution set by
-            the base_resolution parameter
+        bounds : array
+            Either a 2x3 array of a lower bound and upper bound point to bound the cutout in units of voxels in a resolution set by
+            the base_resolution parameter. Alternatively, if voxel_dimensions is set, bounds is a 3-element array specifying the center of the
+            field of view.
+        voxel_dimensons : array or None, optional
+            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+            as the center.
         mip : int, optional
             Mip level of imagery to get if something other than the default is wanted, by default None
 
@@ -275,11 +285,16 @@ class ImageryClient(object):
 
         if mip is None:
             mip = self._base_imagery_mip
+
         bounds_vx = self._rescale_for_mip(bounds, mip, use_cv='image')
+        if voxel_dimensions is not None:
+            width, height, depth = voxel_dimensions
+            bounds_vx = bounds_from_center(np.atleast_2d(
+                bounds_vx)[0], width=width, height=height, depth=depth)
         slices = self._bounds_to_slices(bounds_vx)
         return np.array(np.squeeze(self.image_cv.download(slices, mip=mip)))
 
-    def segmentation_cutout(self, bounds, root_ids='all', mip=None, verbose=False):
+    def segmentation_cutout(self, bounds, root_ids='all', mip=None, voxel_dimensions=None,  verbose=False):
         """Get a cutout of the segmentation imagery for some or all root ids between set bounds.
         Note that if all root ids are requested in a large region, it could take a long time to query
         all supervoxels.
@@ -294,8 +309,9 @@ class ImageryClient(object):
             find all root ids corresponding to the supervoxels in the cutout and get all of them. None, by default 'all'
         mip : int, optional
             Mip level of the segmentation if something other than the defualt is wanted, by default None
-        verbose : bool, optional
-            If true, prints statements about the progress as it goes. By default, False.
+        voxel_dimensons : array or None, optional
+            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+            as the center.
 
         Returns
         -------
@@ -309,7 +325,11 @@ class ImageryClient(object):
             mip = self._base_segmentation_mip
 
         bounds_vx = self._rescale_for_mip(bounds, mip, use_cv='segmentation')
-        slices = self._bounds_to_slices(bounds_vx)
+        if voxel_dimensions is not None:
+            width, height, depth = voxel_dimensions
+            bounds_vx = bounds_from_center(np.atleast_2d(
+                bounds_vx)[0], width=width, height=height, depth=depth)
+
         if isinstance(root_ids, str):
             if root_ids == 'all':
                 seg_cutout = self.segmentation_cv.download(
@@ -320,7 +340,7 @@ class ImageryClient(object):
         else:
             return np.array(np.squeeze(self.segmentation_cv.download(slices, segids=root_ids, mip=mip, timestamp=self.timestamp)))
 
-    def split_segmentation_cutout(self, bounds, root_ids='all', mip=None, include_null_root=False, verbose=False):
+    def split_segmentation_cutout(self, bounds, root_ids='all', mip=None, include_null_root=False, voxel_dimensions=None, verbose=False):
         """Generate segmentation cutouts with a single binary mask for each root id, organized as a dict with keys as root ids and masks as values.
 
         Parameters
@@ -335,6 +355,9 @@ class ImageryClient(object):
             Mip level of the segmentation if something other than the default is wanted, by default None
         include_null_root : bool, optional
             If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.
+        voxel_dimensons : array or None, optional
+            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+            as the center.
         verbose : bool, optional
             If true, prints statements about the progress as it goes. By default, False.
 
@@ -344,7 +367,7 @@ class ImageryClient(object):
             Dict whose keys are root ids and whose values are the binary mask for that root id, with a 1 where the object contains the voxel.
         """
         seg_img = self.segmentation_cutout(
-            bounds=bounds, root_ids=root_ids, mip=mip, verbose=verbose)
+            bounds=bounds, root_ids=root_ids, mip=mip, voxel_dimensions=voxel_dimensions, verbose=verbose)
         return self.segmentation_masks(seg_img, include_null_root)
 
     def segmentation_masks(self, seg_img, include_null_root=False):
@@ -370,7 +393,9 @@ class ImageryClient(object):
             split_segmentation[root_id] = (seg_img == root_id).astype(int)
         return split_segmentation
 
-    def image_and_segmentation_cutout(self, bounds, image_mip=None, segmentation_mip=None, root_ids='all', resize=True, split_segmentations=False, include_null_root=False, verbose=False):
+    def image_and_segmentation_cutout(self, bounds, image_mip=None, segmentation_mip=None, root_ids='all', resize=True,
+                                      split_segmentations=False, include_null_root=False, image_voxel_dimensions=None,
+                                      verbose=False):
         """Download aligned and scaled imagery and segmentation data at a given resolution.
 
         Parameters
@@ -393,6 +418,9 @@ class ImageryClient(object):
             an array with root_ids (using segmentation_cutout), by default False
         include_null_root : bool, optional
             If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.
+        voxel_dimensons : array or None, optional
+            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+            as the center. Note that this will not generate aligned data if the image and segmentation mips are not the same.
         verbose : bool, optional
             If True, prints statements about the progress as it goes. By default, False.
 
@@ -430,6 +458,7 @@ class ImageryClient(object):
             seg = self.segmentation_cutout(bounds,
                                            root_ids=root_ids,
                                            mip=segmentation_mip,
+                                           voxel_dimensions=voxel_dimensions,
                                            verbose=verbose)
             seg_shape = seg.shape
         else:
@@ -437,6 +466,7 @@ class ImageryClient(object):
                                                  root_ids=root_ids,
                                                  mip=segmentation_mip,
                                                  include_null_root=include_null_root,
+                                                 voxel_dimensions=voxel_dimensions,
                                                  verbose=verbose)
             if len(seg) > 0:
                 seg_shape = seg[list(seg.keys())[0]].shape
@@ -514,7 +544,7 @@ class ImageryClient(object):
                 self.segmentation_cv.mip_resolution(mip))] = mip
         return image_resolution, segmentation_resolution
 
-    def save_imagery(self, filename_prefix, bounds=None, mip=None, precomputed_image=None, slice_axis=2, verbose=False, **kwargs):
+    def save_imagery(self, filename_prefix, bounds=None, mip=None, precomputed_image=None, slice_axis=2, exact=False, verbose=False, **kwargs):
         """Save queried or precomputed imagery to png files.
 
         Parameters
@@ -540,10 +570,11 @@ class ImageryClient(object):
         else:
             img = precomputed_image
         utils._save_image_slices(filename_prefix, 'imagery', img, slice_axis,
-                                 'imagery', verbose=verbose, **kwargs)
+                                 'imagery', verbose=verbose, exact=exact, **kwargs)
         return
 
-    def save_segmentation_masks(self, filename_prefix, bounds=None, mip=None, root_ids='all', precomputed_masks=None, slice_axis=2, include_null_root=False, segmentation_colormap={}, verbose=False, **kwargs):
+    def save_segmentation_masks(self, filename_prefix, bounds=None, mip=None, root_ids='all', precomputed_masks=None,
+                                slice_axis=2, include_null_root=False, segmentation_colormap={}, verbose=False, exact=False, **kwargs):
         """Save queried or precomputed segmentation masks to png files. Additional kwargs are passed to imageio.imwrite.
 
         Parameters
@@ -576,7 +607,7 @@ class ImageryClient(object):
         """
         if precomputed_masks is None:
             seg_dict = self.split_segmentation_cutout(
-                bounds=bounds, root_ids=root_ids, mip=mip, include_null_root=include_null_root)
+                bounds=bounds, root_ids=root_ids, mip=mip, exact=exact, include_null_root=include_null_root)
         else:
             seg_dict = precomputed_masks
 

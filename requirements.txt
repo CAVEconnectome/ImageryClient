@@ -1,6 +1,5 @@
 scipy
 numpy
-annotationframeworkclient
 cloud-volume
 Pillow
 fastremap
