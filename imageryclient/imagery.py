@@ -12,7 +12,7 @@ import imageio
 from . import utils
 
 
-def bounds_from_center(ctr, width=0, height=0, depth=0):
+def bounds_from_center(ctr, width=1, height=1, depth=1):
     """Generate bounds from a center point and dimensions for each direction
 
     Parameters
@@ -20,14 +20,14 @@ def bounds_from_center(ctr, width=0, height=0, depth=0):
     ctr : array-like
         x,y,z coordinates of the center of the bounds in voxel dimensions.
     width: int, optional 
-        Width of the box in the x direction.
-        Default is 0.
+        Width of the box in the x direction in. 
+        Default is 1.
     height: int, optional 
         Height of the box in the y direction.
-        Default is 0.
+        Default is 1.
     depth: int, optional 
         Depth of the box in the z direction.
-        Default is 0.
+        Default is 1.
 
     Returns
     -------
@@ -264,7 +264,11 @@ class ImageryClient(object):
     def _compute_bounds(self, bounds, mip, use_cv, voxel_dimensions):
         bounds_vx = self._rescale_for_mip(bounds, mip, use_cv=use_cv)
         if voxel_dimensions is not None:
-            width, height, depth = voxel_dimensions
+            if len(voxel_dimensions) == 3:
+                width, height, depth = voxel_dimensions
+            elif len(voxel_dimensions) == 2:
+                width, height = voxel_dimensions
+                depth = 1
             bounds_vx = bounds_from_center(np.atleast_2d(bounds_vx)[0],
                                            width=width, height=height, depth=depth)
         bbox = self._bounds_to_slices(bounds_vx)
