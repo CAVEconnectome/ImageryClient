@@ -19,13 +19,13 @@ def bounds_from_center(ctr, width=1, height=1, depth=1):
     ----------
     ctr : array-like
         x,y,z coordinates of the center of the bounds in voxel dimensions.
-    width: int, optional 
-        Width of the box in the x direction in. 
+    width: int, optional
+        Width of the box in the x direction in.
         Default is 1.
-    height: int, optional 
+    height: int, optional
         Height of the box in the y direction.
         Default is 1.
-    depth: int, optional 
+    depth: int, optional
         Depth of the box in the z direction.
         Default is 1.
 
@@ -323,7 +323,7 @@ class ImageryClient(object):
 
         Returns
         -------
-        numpy.ndarray 
+        numpy.ndarray
             Array whose elements correspond to the root id (or, if root_ids=None, the supervoxel id) at each voxel.
         """
         if self.segmentation_cv is None:
@@ -399,8 +399,7 @@ class ImageryClient(object):
         return split_segmentation
 
     def image_and_segmentation_cutout(self, bounds, image_mip=None, segmentation_mip=None, root_ids='all', resize=True,
-                                      split_segmentations=False, include_null_root=False, image_voxel_dimensions=None,
-                                      segmentation_voxel_dimensions=None, verbose=False):
+                                      split_segmentations=False, include_null_root=False, voxel_dimensions=None, verbose=False):
         """Download aligned and scaled imagery and segmentation data at a given resolution.
 
         Parameters
@@ -423,20 +422,15 @@ class ImageryClient(object):
             an array with root_ids (using segmentation_cutout), by default False
         include_null_root : bool, optional
             If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.
-        image_voxel_dimensons : array or None, optional
-            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions of the image cutout. In this case, bounds is treated
-            as the center. Note that this will not generate aligned data if the image and segmentation mips are not the same. Note that if explicit
-            image and segmentation voxel dimensions are used, both must be set and care must be taken to ensure they align.
-        segmentation_voxel_dimensions : array or None.
-            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions of the segmentation cutout. In this case, bounds is treated
-            as the center. Note that this will not generate aligned data if the image and segmentation mips are not the same. Note that if explicit
-            image and segmentation voxel dimensions are used, both must be set and care must be taken to ensure they align.
+        voxel_dimensons : array or None, optional
+            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+            as the center.
         verbose : bool, optional
             If True, prints statements about the progress as it goes. By default, False.
 
         Returns
         -------
-        cloudvolume.VolumeCutout 
+        cloudvolume.VolumeCutout
             Imagery volume cutout
 
         numpy.ndarray or dict
@@ -451,11 +445,20 @@ class ImageryClient(object):
         seg_resolution = self.segmentation_cv.mip_resolution(segmentation_mip)
         if np.all(img_resolution == seg_resolution):
             zoom_to = None
+            image_voxel_dimensions = voxel_dimensions
+            segmentation_voxel_dimensions = voxel_dimensions
         if np.all(img_resolution >= seg_resolution):
             zoom_to = 'segmentation'
+            segmentation_voxel_dimensions = voxel_dimensions
+            res_scaling = np.array(seg_resolution) / np.array(img_resolution)
+            image_voxel_dimensions = [int(vd * rs) for vd,
+                                      rs in zip(voxel_dimensions, res_scaling)]
         else:
             zoom_to = 'image'
-
+            image_voxel_dimensions = voxel_dimensions
+            res_scaling = np.array(img_resolution) / np.array(seg_resolution)
+            segmentation_voxel_dimensions = [int(vd * rs) for vd,
+                                             rs in zip(voxel_dimensions, res_scaling)]
         if verbose:
             print('Downloading images')
         img = self.image_cutout(bounds=bounds,
@@ -630,8 +633,7 @@ class ImageryClient(object):
         pass
 
     def save_image_and_segmentation_masks(self, filename_prefix, bounds=None, image_mip=None, segmentation_mip=None,
-                                          root_ids='all', resize=True, precomputed_data=None, slice_axis=2,
-                                          image_voxel_dimensions=None, segmentation_voxel_dimensions=None,
+                                          root_ids='all', resize=True, precomputed_data=None, slice_axis=2, voxel_dimensions=None,
                                           segmentation_colormap={}, include_null_root=False, verbose=False, **kwargs):
         """Save aligned and scaled imagery and segmentation mask cutouts as pngs. Kwargs are passed to imageio.imwrite.
 
@@ -671,8 +673,8 @@ class ImageryClient(object):
         if precomputed_data is not None:
             img, seg_dict = precomputed_data
         else:
-            img, seg_dict = self.image_and_segmentation_cutout(bounds=bounds, image_mip=image_mip, segmentation_mip=segmentation_mip, image_voxel_dimensions=image_voxel_dimensions,
-                                                               segmentation_voxel_dimensions=segmentation_voxel_dimensions, root_ids=root_ids, resize=resize, include_null_root=include_null_root, split_segmentations=True, verbose=verbose)
+            img, seg_dict = self.image_and_segmentation_cutout(bounds=bounds, image_mip=image_mip, segmentation_mip=segmentation_mip, voxel_dimensions=voxel_dimensions,
+                                                               root_ids=root_ids, resize=resize, include_null_root=include_null_root, split_segmentations=True, verbose=verbose)
 
         self.save_imagery(filename_prefix, precomputed_image=img,
                           slice_axis=slice_axis, verbose=verbose, **kwargs)

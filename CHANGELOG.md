@@ -5,6 +5,21 @@ But I make mistakes sometimes.
 
 <!-- ## Unreleased -->
 
+### Added
+
+- 'voxel_dimensions' arguments can be used to specify pixel dimensions instead of voxel dimensions. If used, the 'bounds' argument instead specifies the center
+
+### Fixed
+
+- No longer need annotationframeworkclient (although it's still useful)
+- Directly saving files is allowed
+
+### Changed
+
+- Changed behavior of bounds_from_center to use width/height/depth instead of radius-style values
+- More direct use of newer cloudvolume features
+- Cloudvolume version 3.1.0 or greater is now required
+
 ## [0.2.3] - 2020-09-24
 
 ### Fixed
