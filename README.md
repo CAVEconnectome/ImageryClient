@@ -35,13 +35,14 @@ img_client = ic.ImageryClient(image_source=img_src,
 We need bounds to make a cutout.
 The imagery client takes bounds a pair of points: upper-left and lower-right.
 Since often we are using analysis points to center an image on, `bounds_from_center` can help produce 2d or 3d bounds around a specified point.
+The first argument is the center, subsequent ones set width/height/depth.
 Note that points are by default in voxel space for mip 0, thus correspond to values shown in Neuroglancer.
 
 ```python
 ctr = [5319, 8677, 1201]
-width = 200
+image_size = 400
 
-bounds = ic.bounds_from_center(ctr, delx=width, dely=width)
+bounds = ic.bounds_from_center(ctr, width=image_size, height=image_size, depth=1)
 ```
 
 ### Imagery
@@ -57,6 +58,37 @@ Image.fromarray(image.T)
 ```
 
 ![imagery base](example_images/img_base.png)
+
+#### An alternative to bounds
+
+When upper and lower bounds are specified, the resolution will change with mip level but the field of view that is downloaded will remain the same.
+Alternatively, one might want to download an image with a specific pixel size and a specific mip level and you want whatever field of view that gives you.
+This can be done in `image_cutout` by specifying the center point in the place of bounds and also specify voxel_dimensions as a 2- or 3-element array.
+The center point _will_ be adjusted as needed, while the dimensions will not.
+
+```python
+image = img_client.image_cutout(ctr, voxel_dimensions=(img_size, img_size))
+```
+
+If you specify mip level, this approach will always yield an image with the same size while a bounds-based approach will get smaller with increasing mips as the effective resolution gets coarser.
+
+
+For example, using bounds:
+```python
+image = img_client.image_cutout(bounds, mip=3)
+Image.fromarray(image.T)
+```
+
+![imagery scaled](example_images/scaled_mip_3.png)
+
+And using specified voxel dimensions:
+```python
+image = img_client.image_cutout(ctr, mip=3, voxel_dimensions=(img_size, img_size))
+Image.fromarray(image.T)
+```
+
+![imagery exact](example_images/exact_mip_3.png)
+
 
 ### Segmentations
 
@@ -96,7 +128,6 @@ Image.fromarray((split_seg[ root_ids[0] ].T * 255).astype('uint8'))
 
 ![segmentation single](example_images/seg_single.png)
 
-
 ### Aligned cutouts
 
 Aligned image and segmentations can be downloaded in one call, as well.
@@ -108,6 +139,7 @@ image, segs = img_client.image_and_segmentation_cutout(bounds,
                                                        split_segmentations=True,
                                                        root_ids=root_ids)
 ```
+
 
 ## Producing overlays
 
