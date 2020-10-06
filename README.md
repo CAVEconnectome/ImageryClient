@@ -72,7 +72,16 @@ image = img_client.image_cutout(ctr, voxel_dimensions=(img_size, img_size))
 
 If you specify mip level, this approach will always yield an image with the same size while a bounds-based approach will get smaller with increasing mips as the effective resolution gets coarser.
 
-For example:
+
+For example, using bounds:
+```python
+image = img_client.image_cutout(bounds, mip=3)
+Image.fromarray(image.T)
+```
+
+![imagery scaled](example_images/scaled_mip_3.png)
+
+And using specified voxel dimensions:
 ```python
 image = img_client.image_cutout(ctr, mip=3, voxel_dimensions=(img_size, img_size))
 Image.fromarray(image.T)
@@ -80,12 +89,6 @@ Image.fromarray(image.T)
 
 ![imagery exact](example_images/exact_mip_3.png)
 
-```python
-image = img_client.image_cutout(bounds, mip=3)
-Image.fromarray(image.T)
-```
-
-![imagery scaled](example_images/scaled_mip_3.png)
 
 ### Segmentations
 
