@@ -78,14 +78,14 @@ image = img_client.image_cutout(ctr, mip=3, voxel_dimensions=(img_size, img_size
 Image.fromarray(image.T)
 ```
 
-[imagery exact](example_images/exact_mip_3.png)
+![imagery exact](example_images/exact_mip_3.png)
 
 ```python
 image = img_client.image_cutout(bounds, mip=3)
 Image.fromarray(image.T)
 ```
 
-[imagery scaled](example_images/scaled_mip_3.png)
+![imagery scaled](example_images/scaled_mip_3.png)
 
 ### Segmentations
 
