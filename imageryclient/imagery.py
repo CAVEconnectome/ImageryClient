@@ -445,20 +445,33 @@ class ImageryClient(object):
         seg_resolution = self.segmentation_cv.mip_resolution(segmentation_mip)
         if np.all(img_resolution == seg_resolution):
             zoom_to = None
-            image_voxel_dimensions = voxel_dimensions
-            segmentation_voxel_dimensions = voxel_dimensions
-        if np.all(img_resolution >= seg_resolution):
+            if voxel_dimensions is not None:
+                image_voxel_dimensions = voxel_dimensions
+                segmentation_voxel_dimensions = voxel_dimensions
+            else:
+                image_voxel_dimensions = None
+                segmentation_voxel_dimensions = None
+        elif np.all(img_resolution >= seg_resolution):
             zoom_to = 'segmentation'
-            segmentation_voxel_dimensions = voxel_dimensions
             res_scaling = np.array(seg_resolution) / np.array(img_resolution)
-            image_voxel_dimensions = [int(vd * rs) for vd,
-                                      rs in zip(voxel_dimensions, res_scaling)]
+            if voxel_dimensions is not None:
+                segmentation_voxel_dimensions = voxel_dimensions
+                image_voxel_dimensions = [int(vd * rs) for vd,
+                                          rs in zip(segmentation_voxel_dimensions, res_scaling)]
+            else:
+                image_voxel_dimensions = None
+                segmentation_voxel_dimensions = None
         else:
             zoom_to = 'image'
-            image_voxel_dimensions = voxel_dimensions
             res_scaling = np.array(img_resolution) / np.array(seg_resolution)
-            segmentation_voxel_dimensions = [int(vd * rs) for vd,
-                                             rs in zip(voxel_dimensions, res_scaling)]
+            if voxel_dimensions is not None:
+                image_voxel_dimensions = voxel_dimensions
+                segmentation_voxel_dimensions = [int(vd * rs) for vd,
+                                                 rs in zip(image_voxel_dimensions, res_scaling)]
+            else:
+                image_voxel_dimensions = None
+                segmentation_voxel_dimensions = None
+
         if verbose:
             print('Downloading images')
         img = self.image_cutout(bounds=bounds,
