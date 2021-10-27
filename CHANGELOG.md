@@ -4,6 +4,12 @@ This project attempts to follow [Semantic Versioning](https://semver.org) and us
 But I make mistakes sometimes.
 
 <!-- ## Unreleased -->
+### Added
+
+### Fixed
+
+### Changed
+
 ## [0.4.0] - 2021-10-27
 ### Added
 
@@ -11,6 +17,7 @@ But I make mistakes sometimes.
 
 ### Fixed
 
+- Switched from annotationframeworkclient to caveclient
 - No longer need caveclient (although it's still useful)
 - Directly saving files is allowed
 
