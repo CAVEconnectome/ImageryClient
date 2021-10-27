@@ -77,7 +77,7 @@ class ImageryClient(object):
         Datastack name to lookup information for in the InfoService, by default None
     server_address : str, optional
         Address of an InfoService host, by default None. If none, uses defaults in
-        the annotationframeworkclient.
+        the CAVEclient.
     base_resolution : array-like or 'image' or 'segmentation', optional
         Sets the voxel resolution that bounds will be entered in, by default 'image'.
         Literal resolutions will be followed, while "image" or "segmentation" use the
@@ -93,10 +93,10 @@ class ImageryClient(object):
         If False, no segmentation cloudvolume is initialized. By default True
     imagery : bool, optional
         If False, no imagery cloudvolume is initialized. By default True
-    framework_client : annotationframeworkclient.FrameworkClient, optional
+    framework_client : caveclient.CAVEclient, optional
         A pre-initialized Framework client to be used instead of initializing a new one.
     auth_token : str or None, optional
-        Auth token to use for cloudvolume. If None, uses the default values from the FrameworkClient. Default is None.
+        Auth token to use for cloudvolume. If None, uses the default values from the CAVEclient. Default is None.
     timestamp : datetime.datetime or None,
         Fixed timestamp to use for segmentation lookups. If None, defaults to the present time
         when each function is run. Default is None.
@@ -123,11 +123,11 @@ class ImageryClient(object):
             self._client = framework_client
         elif datastack_name is not None:
             try:
-                from annotationframeworkclient.frameworkclient import FrameworkClient
+                from caveclient import CAVEclient
             except:
                 raise ImportError(
-                    'You need to install annotationframeworkclient to use this functionality')
-            self._client = FrameworkClient(
+                    'You need to install caveclient to use this functionality')
+            self._client = CAVEclient(
                 datastack_name, server_address=server_address)
         else:
             self._client = None
