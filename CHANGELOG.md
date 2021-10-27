@@ -11,7 +11,7 @@ But I make mistakes sometimes.
 
 ### Fixed
 
-- No longer need annotationframeworkclient (although it's still useful)
+- No longer need caveclient (although it's still useful)
 - Directly saving files is allowed
 
 ### Changed
