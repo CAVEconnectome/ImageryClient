@@ -4,7 +4,7 @@ This project attempts to follow [Semantic Versioning](https://semver.org) and us
 But I make mistakes sometimes.
 
 <!-- ## Unreleased -->
-
+## [0.4.0] - 2021-10-27
 ### Added
 
 - 'voxel_dimensions' arguments can be used to specify pixel dimensions instead of voxel dimensions. If used, the 'bounds' argument instead specifies the center
