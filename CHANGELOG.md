@@ -3,13 +3,15 @@
 This project attempts to follow [Semantic Versioning](https://semver.org) and uses [Keep-a-Changelog formatting](https://keepachangelog.com/en/1.0.0/).
 But I make mistakes sometimes.
 
-<!-- ## Unreleased -->
+## [1.0.0] - 2022-11-27
 ### Added
 
+- Richer integration of specified resolution, to take advantage of better Cloudvolume support for resolutions.
+- Split apart the notion of bounding box dimensions from image dimensions. See bbox_size vs image_size in teh readme.
+- Vastly improved configuration by a CAVEclient
 ### Fixed
 
-### Changed
-
+- Order of arguments is more consistent across functions, and more sensible as well.
 ## [0.4.0] - 2021-10-27
 ### Added
 

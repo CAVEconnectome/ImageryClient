@@ -4,6 +4,12 @@ from functools import partial
 from scipy import ndimage
 from PIL import Image
 
+def rescale_to_bounds(img, bbox):
+    img = np.atleast_3d(img)
+    img_shape = np.array(img.shape)
+    bbox_shape = np.array(bbox.maxpt - bbox.minpt)
+    zoom_scale = bbox_shape / img_shape
+    return ndimage.zoom(img, zoom_scale, mode="nearest", order=0).squeeze()
 
 def is_precomputed(path):
     if re.search(r'^precomputed://', path) is None:
