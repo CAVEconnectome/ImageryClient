@@ -6,6 +6,7 @@ from functools import partial
 import datetime
 from . import utils
 
+
 def bounds_from_center(ctr, width=1, height=1, depth=1):
     """Generate bounds from a center point and dimensions for each direction
 
@@ -140,14 +141,13 @@ class ImageryClient(object):
         self._img_cv = None
         self._seg_cv = None
 
-        self._resolution = None
-        self._configure_from_client(client)
-        self._resolution = self._configure_resolution(resolution)
+        self._resolution = resolution
+        if client is not None:
+            self._configure_from_client(client)
+        self._configure_resolution(resolution)
+
 
     def _configure_from_client(self, client):
-        if client is None:
-            return
-
         if self._auth_token is None:
             self._auth_token = client.auth.token
         if self._image_source is None and self._use_imagery:
@@ -159,7 +159,7 @@ class ImageryClient(object):
 
     def _configure_resolution(self, resolution):
         if resolution is None:
-            resolution = 'image'
+            resolution = "image"
 
         if isinstance(resolution, str):
             if resolution in ["image", "segmentation"]:
@@ -168,13 +168,13 @@ class ImageryClient(object):
                         raise ValueError(
                             "Cannot set resolution from imagery if not being used"
                         )
-                    self._resolution = self.image_cv.mip_resolution(0)
+                    self._resolution = np.array(self.image_cv.mip_resolution(0))
                 elif resolution == "segmentation":
                     if self._use_segmentation is None:
                         raise ValueError(
                             "Cannot set resolution from segmentation if not being used"
                         )
-                    self._resolution = self.segmentation_cv.mip_resolution(0)
+                    self._resolution = np.array(self.segmentation_cv.mip_resolution(0))
             else:
                 raise ValueError(
                     'Base resolution must be set by the client, array-like, "image" or "segmentation"'
@@ -290,7 +290,7 @@ class ImageryClient(object):
             Voxel resolution used for the bounds / dimensions. If none, defaults to client default.
         scale_to_bounds : bool, optional.
             If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
-            
+
         Returns
         -------
             cloudvolume.VolumeCutout
@@ -316,7 +316,9 @@ class ImageryClient(object):
         if scale_to_bounds:
             return utils.rescale_to_bounds(
                 img,
-                self._compute_bounds(bounds, voxel_dimensions),      # downloading changes the bbox
+                self._compute_bounds(
+                    bounds, voxel_dimensions
+                ),  # downloading changes the bbox
             )
         else:
             return img
@@ -402,7 +404,9 @@ class ImageryClient(object):
         if scale_to_bounds:
             return utils.rescale_to_bounds(
                 seg,
-                self._compute_bounds(bounds, voxel_dimensions),      # downloading changes the bbox
+                self._compute_bounds(
+                    bounds, voxel_dimensions
+                ),  # downloading changes the bbox
             )
         else:
             return seg
@@ -663,7 +667,12 @@ class ImageryClient(object):
             If True, prints the progress, by default False
         """
         if precomputed_image is None:
-            img = self.image_cutout(bounds, mip=mip, voxel_dimensions=voxel_dimensions, scale_to_bounds=scale_to_bounds)
+            img = self.image_cutout(
+                bounds,
+                mip=mip,
+                voxel_dimensions=voxel_dimensions,
+                scale_to_bounds=scale_to_bounds,
+            )
         else:
             img = precomputed_image
         save_image_slices(
