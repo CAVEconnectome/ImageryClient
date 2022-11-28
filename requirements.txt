@@ -1,6 +1,6 @@
 scipy
 numpy
-cloud-volume >= 3.1.0
+cloud-volume >= 8.0.0
 caveclient
 Pillow
 fastremap
