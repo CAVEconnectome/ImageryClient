@@ -168,7 +168,7 @@ class ImageryClient(object):
         self._resolution = resolution
         if client is not None:
             self._configure_from_client(client)
-        self._configure_resolution(resolution)
+        self._configure_resolution(self._resolution)
 
     def _configure_from_client(self, client):
         if self._auth_token is None:
@@ -295,6 +295,59 @@ class ImageryClient(object):
                 int(height) * mip_resolution[1] / resolution[1],
                 1,
             ]
+
+    def image_bbox_size_from_dimensions(self, image_size, mip=None, resolution=None):
+        """Get the bbox_size equivalent for an imagery cutout with specified pixel dimensions
+
+        Parameters
+        ----------
+            image_size: list-like
+                Image size in pixels (2-element) or voxels (3-element)
+            mip: int or None, optional
+                Mip for which the image would be computed. Defaults to None, which uses the client default.
+            resolution: list-like or None, optional.
+                Resolution to use for the bbox_size. Defaults to None, or the client defauls.
+
+        Returns
+        -------
+            tuple:
+                Argument for bbox_size that would give the desired pixel dimensions.
+        """
+        if mip is None:
+            mip = self._base_imagery_mip
+        if resolution is None:
+            resolution = self._resolution
+        return self._compute_dimensions_from_image_size(
+            image_size, self.image_cv.mip_resolution(mip), resolution
+        )
+
+    def segmentation_bbox_size_from_dimensions(
+        self, image_size, mip=None, resolution=None
+    ):
+        """Get the bbox_size equivalent for an segmentation cutout with specified pixel dimensions
+
+        Parameters
+        ----------
+            image_size: list-like
+                Image size in pixels (2-element) or voxels (3-element)
+            mip: int or None, optional
+                Mip for which the image would be computed. Defaults to None, which uses the client default.
+            resolution: list-like or None, optional.
+                Resolution to use for the bbox_size. Defaults to None, or the client defauls.
+
+        Returns
+        -------
+            tuple:
+                Argument for bbox_size that would give the desired pixel dimensions.
+        """
+
+        if mip is None:
+            mip = self._base_segmentation_mip
+        if resolution is None:
+            resolution = self._resolution
+        return self._compute_dimensions_from_image_size(
+            image_size, self.segmentation_cv.mip_resolution(mip), resolution
+        )
 
     def _compute_bounds(self, bounds, bbox_size):
         if bbox_size is not None:
