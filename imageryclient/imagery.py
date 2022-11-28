@@ -34,6 +34,30 @@ def bounds_from_center(ctr, width=1, height=1, depth=1):
     return np.array([xl, xh])
 
 
+def segmentation_masks(seg_img, include_null_root=False):
+    """Convert a segmentation array into a dict of binary masks for each root id.
+
+    Parameters
+    ----------
+    seg_img : numpy.ndarray
+        Array with voxel values corresponding to the object id at that voxel
+    include_null_root : bool, optional
+        Create a mask for 0 id, which usually denotes no object, by default False
+
+    Returns
+    -------
+    dict
+        Dict of binary masks. Keys are root ids, values are boolean n-d arrays with a 1 where that object is.
+    """
+    split_segmentation = {}
+    for root_id in np.unique(seg_img):
+        if include_null_root is False:
+            if root_id == 0:
+                continue
+        split_segmentation[root_id] = (seg_img == root_id).astype(int)
+    return split_segmentation
+
+
 def save_image_slices(
     filename_prefix,
     filename_suffix,
@@ -146,7 +170,6 @@ class ImageryClient(object):
             self._configure_from_client(client)
         self._configure_resolution(resolution)
 
-
     def _configure_from_client(self, client):
         if self._auth_token is None:
             self._auth_token = client.auth.token
@@ -252,23 +275,44 @@ class ImageryClient(object):
     def _bounds_to_slices(self, bounds):
         return cv.Bbox(bounds[0], bounds[1])
 
-    def _compute_bounds(self, bounds, voxel_dimensions):
-        if voxel_dimensions is not None:
-            if len(voxel_dimensions) == 3:
-                width, height, depth = voxel_dimensions
-            elif len(voxel_dimensions) == 2:
-                width, height = voxel_dimensions
+    def _compute_dimensions_from_image_size(
+        self,
+        image_size,
+        mip_resolution,
+        resolution,
+    ):
+        if len(image_size) == 3:
+            width, height, depth = image_size
+            return [
+                int(width) * mip_resolution[0] / resolution[0],
+                int(height) * mip_resolution[1] / resolution[1],
+                int(depth) * mip_resolution[2] / resolution[2],
+            ]
+        elif len(image_size) == 2:
+            width, height = image_size
+            return [
+                int(width) * mip_resolution[0] / resolution[0],
+                int(height) * mip_resolution[1] / resolution[1],
+                1,
+            ]
+
+    def _compute_bounds(self, bounds, bbox_size):
+        if bbox_size is not None:
+            if len(bbox_size) == 3:
+                width, height, depth = bbox_size
+            elif len(bbox_size) == 2:
+                width, height = bbox_size
                 depth = 1
             bounds = bounds_from_center(
                 np.atleast_2d(bounds)[0], width=width, height=height, depth=depth
             )
-        bbox = self._bounds_to_slices(bounds)
-        return bbox
+        return self._bounds_to_slices(bounds)
 
     def image_cutout(
         self,
         bounds,
-        voxel_dimensions=None,
+        bbox_size=None,
+        image_size=None,
         mip=None,
         resolution=None,
         scale_to_bounds=None,
@@ -279,15 +323,17 @@ class ImageryClient(object):
         ----------
         bounds : array
             Either a 2x3 array of a lower bound and upper bound point to bound the cutout in units of voxels in a resolution set by
-            the base_resolution parameter. Alternatively, if voxel_dimensions is set, bounds is a 3-element array specifying the center of the
+            the base_resolution parameter. Alternatively, if bbox_size or image_size is set, bounds should be a 3-element array specifying the center of the
             field of view.
-        voxel_dimensons : array or None, optional
-            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+        bbox_size : array or None, optional
+            If not None, bbox_size is a 3 element array of ints giving the dimensions. In this case, bounds is treated
             as the center.
+        image_size : array or None, optional
+            If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.
         mip : int, optional
-            Mip level of imagery to get if something other than the default is wanted, by default None
+            Mip level of imagery to get if something other than the default is wanted, by default None.
         resolution : list-like, optional
-            Voxel resolution used for the bounds / dimensions. If none, defaults to client default.
+            Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.
         scale_to_bounds : bool, optional.
             If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
 
@@ -307,7 +353,14 @@ class ImageryClient(object):
             if scale_to_bounds is None:
                 scale_to_bounds = False
 
-        bbox = self._compute_bounds(bounds, voxel_dimensions)
+        if image_size is not None:
+            if bbox_size is not None:
+                raise ValueError("Cannot set both image size and bbox size!")
+            bbox_size = self._compute_dimensions_from_image_size(
+                image_size, self.image_cv.mip_resolution(mip), resolution
+            )
+
+        bbox = self._compute_bounds(bounds, bbox_size)
         img = np.array(
             np.squeeze(
                 self.image_cv.download(bbox, coord_resolution=resolution, mip=mip)
@@ -316,9 +369,7 @@ class ImageryClient(object):
         if scale_to_bounds:
             return utils.rescale_to_bounds(
                 img,
-                self._compute_bounds(
-                    bounds, voxel_dimensions
-                ),  # downloading changes the bbox
+                self._compute_bounds(bounds, bbox_size),  # downloading changes the bbox
             )
         else:
             return img
@@ -327,7 +378,8 @@ class ImageryClient(object):
         self,
         bounds,
         root_ids="all",
-        voxel_dimensions=None,
+        bbox_size=None,
+        image_size=None,
         mip=None,
         resolution=None,
         timestamp=None,
@@ -345,11 +397,19 @@ class ImageryClient(object):
         root_ids : list, None, or 'all', optional
             If a list, only compute the voxels for a specified set of root ids. If None, default to the supervoxel ids. If 'all',
             find all root ids corresponding to the supervoxels in the cutout and get all of them. None, by default 'all'
+        bbox_size : array or None, optional
+            If not None, bbox_size is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+            as the center.
+        image_size : array or None, optional
+            If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.
         mip : int, optional
             Mip level of the segmentation if something other than the defualt is wanted, by default None
-        voxel_dimensons : array or None, optional
-            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
-            as the center.
+        resolution : list-like, optional
+            Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.
+        timestamp : datetime or None, optional
+            Timestamp to use for dynamic segmentation data
+        scale_to_bounds : bool or None, optional
+            If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
 
         Returns
         -------
@@ -358,20 +418,23 @@ class ImageryClient(object):
         """
         if self.segmentation_cv is None:
             return np.array([])
-
         if mip is None:
             mip = self._base_segmentation_mip
         else:
             if scale_to_bounds is None:
                 scale_to_bounds = False
-
         if resolution is None:
             resolution = self.resolution
-
         if timestamp is None:
             timestamp = self._timestamp
 
-        bbox = self._compute_bounds(bounds, voxel_dimensions)
+        if image_size is not None:
+            if bbox_size is not None:
+                raise ValueError("Cannot set both image size and bbox size!")
+            bbox_size = self._compute_dimensions_from_image_size(
+                image_size, self.segmentation_cv.mip_resolution(mip), resolution
+            )
+        bbox = self._compute_bounds(bounds, bbox_size)
 
         if isinstance(root_ids, str):
             if root_ids == "all":
@@ -404,9 +467,7 @@ class ImageryClient(object):
         if scale_to_bounds:
             return utils.rescale_to_bounds(
                 seg,
-                self._compute_bounds(
-                    bounds, voxel_dimensions
-                ),  # downloading changes the bbox
+                self._compute_bounds(bounds, bbox_size),  # downloading changes the bbox
             )
         else:
             return seg
@@ -415,9 +476,10 @@ class ImageryClient(object):
         self,
         bounds,
         root_ids="all",
-        mip=None,
         include_null_root=False,
-        voxel_dimensions=None,
+        bbox_size=None,
+        image_size=None,
+        mip=None,
         resolution=None,
         timestamp=None,
         scale_to_bounds=None,
@@ -432,13 +494,21 @@ class ImageryClient(object):
         root_ids : list, None, or 'all', optional
             If a list, only compute the voxels for a specified set of root ids. If None, default to the supervoxel ids. If 'all',
             find all root ids corresponding to the supervoxels in the cutout and get all of them. None, by default 'all'
-        mip : int, optional
-            Mip level of the segmentation if something other than the default is wanted, by default None
         include_null_root : bool, optional
             If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.
-        voxel_dimensons : array or None, optional
-            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+        bbox_size : array or None, optional
+            If not None, bbox_size is a 3 element array of ints giving the dimensions. In this case, bounds is treated
             as the center.
+        image_size : array or None, optional
+            If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.
+        mip : int, optional
+            Mip level of the segmentation if something other than the default is wanted, by default None
+        resolution : list-like, optional
+            Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.
+        timestamp : datetime or None, optional
+            Timestamp to use for dynamic segmentation data
+        scale_to_bounds : bool or None, optional
+            If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
 
         Returns
         -------
@@ -449,35 +519,13 @@ class ImageryClient(object):
             bounds=bounds,
             root_ids=root_ids,
             mip=mip,
-            voxel_dimensions=voxel_dimensions,
+            bbox_size=bbox_size,
+            image_size=image_size,
             resolution=resolution,
             timestamp=timestamp,
             scale_to_bounds=scale_to_bounds,
         )
-        return self.segmentation_masks(seg_img, include_null_root)
-
-    def segmentation_masks(self, seg_img, include_null_root=False):
-        """Convert a segmentation array into a dict of binary masks for each root id.
-
-        Parameters
-        ----------
-        seg_img : numpy.ndarray
-            Array with voxel values corresponding to the object id at that voxel
-        include_null_root : bool, optional
-            Create a mask for 0 id, which usually denotes no object, by default False
-
-        Returns
-        -------
-        dict
-            Dict of binary masks. Keys are root ids, values are boolean n-d arrays with a 1 where that object is.
-        """
-        split_segmentation = {}
-        for root_id in np.unique(seg_img):
-            if include_null_root is False:
-                if root_id == 0:
-                    continue
-            split_segmentation[root_id] = (seg_img == root_id).astype(int)
-        return split_segmentation
+        return segmentation_masks(seg_img, include_null_root)
 
     def image_and_segmentation_cutout(
         self,
@@ -488,7 +536,7 @@ class ImageryClient(object):
         resize=True,
         split_segmentations=False,
         include_null_root=False,
-        voxel_dimensions=None,
+        bbox_size=None,
         resolution=None,
         timestamp=None,
         scale_to_bounds=None,
@@ -516,9 +564,16 @@ class ImageryClient(object):
             an array with root_ids (using segmentation_cutout), by default False
         include_null_root : bool, optional
             If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.
-        voxel_dimensons : array or None, optional
-            If not None, voxel_dimensons is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+        bbox_size : array or None, optional
+            If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
             as the center.
+        resolution : list-like, optional
+            Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.
+        timestamp : datetime or None, optional
+            Timestamp to use for dynamic segmentation data
+        scale_to_bounds : bool or None, optional
+            If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
+
 
         Returns
         -------
@@ -530,61 +585,31 @@ class ImageryClient(object):
         """
         if image_mip is None:
             image_mip = self._base_imagery_mip
-            scale_to_bounds_img = scale_to_bounds
-        else:
-            if scale_to_bounds is None:
-                scale_to_bounds_img = False
-            else:
-                scale_to_bounds_img = scale_to_bounds
-
         if segmentation_mip is None:
             segmentation_mip = self._base_segmentation_mip
-            scale_to_bounds_seg = scale_to_bounds
-        else:
-            if scale_to_bounds is None:
-                scale_to_bounds_seg = False
-            else:
-                scale_to_bounds_seg = scale_to_bounds
+        if resolution is None:
+            resolution = self._resolution
 
         img_resolution = self.image_cv.mip_resolution(image_mip)
         seg_resolution = self.segmentation_cv.mip_resolution(segmentation_mip)
 
         if np.all(img_resolution == seg_resolution):
             zoom_to = None
-            if voxel_dimensions is not None:
-                image_voxel_dimensions = voxel_dimensions
-                segmentation_voxel_dimensions = voxel_dimensions
-            else:
-                image_voxel_dimensions = None
-                segmentation_voxel_dimensions = None
+            scale_to_bounds_seg = scale_to_bounds
+            scale_to_bounds_img = scale_to_bounds
         elif np.all(img_resolution >= seg_resolution):
             zoom_to = "segmentation"
-            res_scaling = np.array(seg_resolution) / np.array(img_resolution)
-            if voxel_dimensions is not None:
-                segmentation_voxel_dimensions = voxel_dimensions
-                image_voxel_dimensions = [
-                    int(vd * rs)
-                    for vd, rs in zip(segmentation_voxel_dimensions, res_scaling)
-                ]
-            else:
-                image_voxel_dimensions = None
-                segmentation_voxel_dimensions = None
+            scale_to_bounds_seg = scale_to_bounds
+            scale_to_bounds_img = False
         else:
             zoom_to = "image"
-            res_scaling = np.array(img_resolution) / np.array(seg_resolution)
-            if voxel_dimensions is not None:
-                image_voxel_dimensions = voxel_dimensions
-                segmentation_voxel_dimensions = [
-                    int(vd * rs) for vd, rs in zip(image_voxel_dimensions, res_scaling)
-                ]
-            else:
-                image_voxel_dimensions = None
-                segmentation_voxel_dimensions = None
+            scale_to_bounds_seg = False
+            scale_to_bounds_img = scale_to_bounds
 
         img = self.image_cutout(
             bounds=bounds,
             mip=image_mip,
-            voxel_dimensions=image_voxel_dimensions,
+            bbox_size=bbox_size,
             resolution=resolution,
             scale_to_bounds=scale_to_bounds_img,
         )
@@ -595,7 +620,7 @@ class ImageryClient(object):
                 bounds,
                 root_ids=root_ids,
                 mip=segmentation_mip,
-                voxel_dimensions=segmentation_voxel_dimensions,
+                bbox_size=bbox_size,
                 resolution=resolution,
                 timestamp=timestamp,
                 scale_to_bounds=scale_to_bounds_seg,
@@ -607,7 +632,7 @@ class ImageryClient(object):
                 root_ids=root_ids,
                 mip=segmentation_mip,
                 include_null_root=include_null_root,
-                voxel_dimensions=segmentation_voxel_dimensions,
+                bbox_size=bbox_size,
                 resolution=resolution,
                 timestamp=timestamp,
                 scale_to_bounds=scale_to_bounds_seg,
@@ -617,7 +642,7 @@ class ImageryClient(object):
             else:
                 seg_shape = 1
 
-        if resize is False or scale_to_bounds is True:
+        if resize is False:
             pass
         elif zoom_to == "segmentation":
             zoom_scale = np.array(seg_shape) / np.array(img_shape)
@@ -631,7 +656,6 @@ class ImageryClient(object):
                     seg[root_id] = ndimage.zoom(
                         seg_cutout, zoom_scale, mode="nearest", order=0
                     )
-
         return img, seg
 
     def save_imagery(
@@ -641,9 +665,11 @@ class ImageryClient(object):
         mip=None,
         precomputed_image=None,
         slice_axis=2,
-        voxel_dimensions=None,
-        verbose=False,
+        bbox_size=None,
+        image_size=None,
+        resolution=None,
         scale_to_bounds=None,
+        verbose=False,
         *kwargs,
     ):
         """Save queried or precomputed imagery to png files.
@@ -663,6 +689,15 @@ class ImageryClient(object):
             If a precomputed image is not provided, bounds must be specified to download the cutout data. By default None
         slice_axis : int, optional
             If the image data is truly 3 dimensional, determines which axis to use to save serial images, by default 2 (i.e. z-axis)
+        bbox_size : array or None, optional
+            If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+            as the center.
+        image_size : array or None, optional
+            If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.
+        resolution : list-like, optional
+            Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.
+        scale_to_bounds : bool or None, optional
+            If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
         verbose : bool, optional
             If True, prints the progress, by default False
         """
@@ -670,7 +705,9 @@ class ImageryClient(object):
             img = self.image_cutout(
                 bounds,
                 mip=mip,
-                voxel_dimensions=voxel_dimensions,
+                bbox_size=bbox_size,
+                image_size=image_size,
+                resolution=resolution,
                 scale_to_bounds=scale_to_bounds,
             )
         else:
@@ -693,14 +730,15 @@ class ImageryClient(object):
         mip=None,
         root_ids="all",
         precomputed_masks=None,
+        segmentation_colormap={},
         slice_axis=2,
         include_null_root=False,
-        segmentation_colormap={},
-        voxel_dimensions=None,
+        bbox_size=None,
+        image_size=None,
         resolution=None,
         timestamp=None,
-        verbose=False,
         scale_to_bounds=None,
+        verbose=False,
         **kwargs,
     ):
         """Save queried or precomputed segmentation masks to png files. Additional kwargs are passed to imageio.imwrite.
@@ -711,8 +749,8 @@ class ImageryClient(object):
             Prefix for the segmentation filenames. The full filename will be either {filename_prefix}_root_id_{root_id}.png
             or {filename_prefix}_root_id_{root_id}_{i}.png, depending on if multiple slices of each root id are saved.
         bounds : 2x3 list of ints, optional
-            A list of the lower and upper bound point for the cutout. The units are voxels in the resolution set by the
-            base_resolution parameter. Only used if a precomputed segmentation is not passed. By default, None.
+            A list of the lower and upper bound point for the cutout. The units are voxels in the resolution specified.
+            Only used if a precomputed segmentation is not passed. By default, None.
         mip : int, optional
             Only used if a precomputed segmentation is not passed. Mip level of segmentation to get if something other than the default
             is wanted, by default None
@@ -723,20 +761,32 @@ class ImageryClient(object):
         precomputed_masks : dict, optional
             Already downloaded dict of mask data to save explicitly. If called this way, the bounds and mip arguments will not apply.
             If precomputed_masks are not provided, bounds must be given to download cutout data. By default None
+        segmentation_colormap : dict, optional
+            A dict of root ids to an uint8 RGB color triplet (0-255) or RGBa quadrooplet to optionally color the mask png. Any root id not specified
+            will be rendered in white. Color triplets default to full opacity. Default is an empty dictionary.
         slice_axis : int, optional
             If the image data is truly 3 dimensional, determines which axis to use to save serial images, by default 2 (i.e. z-axis)
         include_null_root : bool, optional
             If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.
-        segmentation_colormap : dict, optional
-            A dict of root ids to an uint8 RGB color triplet (0-255) or RGBa quadrooplet to optionally color the mask png. Any root id not specified
-            will be rendered in white. Color triplets default to full opacity. Default is an empty dictionary.
+        bbox_size : array or None, optional
+            If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+            as the center.
+        image_size : array or None, optional
+            If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.
+        resolution : list-like, optional
+            Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.
+        timestamp : datetime or None, optional
+            Timestamp to use for dynamic segmentation data
+        scale_to_bounds : bool or None, optional
+            If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
         """
         if precomputed_masks is None:
             seg_dict = self.split_segmentation_cutout(
                 bounds=bounds,
                 root_ids=root_ids,
                 mip=mip,
-                voxel_dimensions=voxel_dimensions,
+                bbox_size=bbox_size,
+                image_size=image_size,
                 include_null_root=include_null_root,
                 resolution=resolution,
                 timestamp=timestamp,
@@ -766,12 +816,12 @@ class ImageryClient(object):
         image_mip=None,
         segmentation_mip=None,
         root_ids="all",
+        include_null_root=False,
+        segmentation_colormap={},
         resize=True,
         precomputed_data=None,
         slice_axis=2,
-        voxel_dimensions=None,
-        segmentation_colormap={},
-        include_null_root=False,
+        bbox_size=None,
         resolution=None,
         timestamp=None,
         scale_to_bounds=None,
@@ -797,6 +847,11 @@ class ImageryClient(object):
             If a list, the segmentation cutout only includes voxels for a specified set of root ids.
             If None, default to the supervoxel ids. If 'all', finds all root ids corresponding to the supervoxels
             in the cutout and get all of them. By default 'all'.
+        include_null_root : bool, optional
+            If True, includes root id of 0, which is usually reserved for a null segmentation value. By default, False.
+        segmentation_colormap : dict, optional
+            A dict of root ids to an uint8 RGB color triplet (0-255) or RGBa quadrooplet to optionally color the mask png. Any root id not specified
+            will be rendered in white. Color triplets default to full opacity. Default is an empty dictionary.
         resize : bool, optional
             If True, upscale the lower resolution cutout to the same resolution of the higher one (either imagery or segmentation).
         precomputed_data : tuple, optional
@@ -804,15 +859,15 @@ class ImageryClient(object):
             cutout data. By default, None.
         slice_axis : int, optional
             If the image data is truly 3 dimensional, determines which axis to use to save serial images, by default 2 (i.e. z-axis)
-        segmentation_colormap : dict, optional
-            A dict of root ids to an uint8 RGB color triplet (0-255) or RGBa quadrooplet to optionally color the mask png. Any root id not specified
-            will be rendered in white. Color triplets default to full opacity. Default is an empty dictionary.
-        include_null_root : bool, optional
-            If True, includes root id of 0, which is usually reserved for a null segmentation value. By default, False.
+        bbox_size : array or None, optional
+            If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+            as the center.
         resolution : list-like, optional
             Voxel resolution of the bounds provided. If not provided, uses the client defaults.
         timestamp : datetime, optional
             Timestamp to use for the segmentation. If not provided, defaults to the client defaults.
+        scale_to_bounds : bool or None, optional
+            If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
 
         """
         if precomputed_data is not None:
@@ -822,7 +877,7 @@ class ImageryClient(object):
                 bounds=bounds,
                 image_mip=image_mip,
                 segmentation_mip=segmentation_mip,
-                voxel_dimensions=voxel_dimensions,
+                bbox_size=bbox_size,
                 root_ids=root_ids,
                 resize=resize,
                 include_null_root=include_null_root,
