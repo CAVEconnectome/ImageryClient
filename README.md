@@ -76,6 +76,10 @@ img_client = ic.ImageryClient(..., resolution=[8,8,30])
 You can also explicitly set the resolution to `"image"` or `"segmentation"` to use the highest available resolution available for either.
 Resolution can also be specified in each of the functions for image or segmentation cutouts, but will default to the client values.
 
+Note that the volumetric data itself is not necessarily at the resolution specified, but rather this parameter determines how to interpret the _coordinates_.
+The resolution is set by the image and segmentation mip levels, which can be added either when creating the ImageryClient instance or when doing any cutout download.
+By default, ImageryClient will use the highest resolution mip level that is not labeled as a `"placeholder"` in CloudVolume.
+
 #### Specifying image size instead of field of view
 
 When upper and lower bounds are specified or a `bbox_size` is used, the resolution will change with mip level but the field of view that is downloaded will remain the same.
@@ -103,6 +107,7 @@ Image.fromarray(image.T)
 
 ![imagery exact](example_images/exact_mip_3.png)
 
+You can also use the `scale_to_bounds=True` argument to upscale an image to the size specified in the bounding box, equivalent to having one pixel for each voxel as measured by the resolution parameter.
 
 ### Segmentations
 
