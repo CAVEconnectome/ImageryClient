@@ -14,6 +14,14 @@ ImageryClient acts as a front end for making aligned cutouts from multiple cloud
 We make use of [Numpy arrays](https://numpy.org/doc/stable/) and [Pillow Images](https://pillow.readthedocs.io/) to represent data.
 Both are extremely rich tools, and to learn more about them please see the appropriate documentation for information about saving data to image files and more. 
 
+## Installation
+
+The standard installation:
+
+`pip install imageryclient`
+
+If you have installation issues due to Cloudvolume, which has a fairly complex set of requirements, we recommend looking at their github [issues page](https://github.com/seung-lab/cloud-volume/issues) for help.
+
 ## How to use ImageryClient
 
 Here, we will use the ImageryClient to get some data from the [Kasthuri et al. 2014 dataset](https://neuroglancer-demo.appspot.com/fafb.html#!gs://fafb-ffn1/main_ng.json) hosted by Google.
