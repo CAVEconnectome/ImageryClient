@@ -18,6 +18,13 @@ def is_precomputed(path):
         return True
 
 
+def _get_lowest_nonplaceholder(cv, ph_text="placeholder"):
+    for ii in cv.available_mips:
+        if cv.mip_key(ii) != ph_text:
+            return ii
+    else:
+        raise ValueError(f'All MIP levels for {cv.base_cloudpath} are labeled as placeholder')
+
 def _grayscale_to_pil(img, four_channel=False):
     """Helper function to convert one channel uint8 image data to RGB for saving.
     """

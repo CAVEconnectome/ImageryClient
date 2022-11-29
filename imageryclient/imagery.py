@@ -137,8 +137,8 @@ class ImageryClient(object):
         imagery=True,
         image_source=None,
         segmentation_source=None,
-        image_mip=0,
-        segmentation_mip=0,
+        image_mip=None,
+        segmentation_mip=None,
         auth_token=None,
         timestamp=None,
     ):
@@ -157,9 +157,6 @@ class ImageryClient(object):
         else:
             self._timestamp = timestamp
 
-        self._base_imagery_mip = image_mip
-        self._base_segmentation_mip = segmentation_mip
-
         self._use_segmentation = segmentation
         self._use_imagery = imagery
         self._img_cv = None
@@ -168,6 +165,7 @@ class ImageryClient(object):
         self._resolution = resolution
         if client is not None:
             self._configure_from_client(client)
+        self._configure_mip_levels(image_mip, segmentation_mip)
         self._configure_resolution(self._resolution)
 
     def _configure_from_client(self, client):
@@ -180,10 +178,20 @@ class ImageryClient(object):
         if self._resolution is None:
             self._resolution = client.info.viewer_resolution()
 
+    def _configure_mip_levels(self, image_mip, segmentation_mip):
+        if image_mip is None:
+            self._base_imagery_mip = utils._get_lowest_nonplaceholder(self.image_cv)
+        else:
+            self._base_imagery_mip = image_mip
+        if segmentation_mip is None:
+            self._base_segmentation_mip = utils._get_lowest_nonplaceholder(self.segmentation_cv)        
+        else:
+            self._base_segmentation_mip = segmentation_mip
+
     def _configure_resolution(self, resolution):
         if resolution is None:
             resolution = "image"
-
+        
         if isinstance(resolution, str):
             if resolution in ["image", "segmentation"]:
                 if resolution == "image":
@@ -191,19 +199,20 @@ class ImageryClient(object):
                         raise ValueError(
                             "Cannot set resolution from imagery if not being used"
                         )
-                    self._resolution = np.array(self.image_cv.mip_resolution(0))
+                    self._resolution = np.array(self.image_cv.mip_resolution(self._base_imagery_mip))
                 elif resolution == "segmentation":
                     if self._use_segmentation is None:
                         raise ValueError(
                             "Cannot set resolution from segmentation if not being used"
                         )
-                    self._resolution = np.array(self.segmentation_cv.mip_resolution(0))
+                    self._resolution = np.array(self.segmentation_cv.mip_resolution(self._base_segmentation_mip))
             else:
                 raise ValueError(
                     'Base resolution must be set by the client, array-like, "image" or "segmentation"'
                 )
         else:
             self._resolution = np.array(resolution)
+
 
     @property
     def token(self):
@@ -245,7 +254,6 @@ class ImageryClient(object):
         if self._img_cv is None:
             self._img_cv = cv.CloudVolume(
                 self.image_source,
-                mip=self._base_imagery_mip,
                 bounded=False,
                 fill_missing=True,
                 progress=False,
@@ -263,7 +271,6 @@ class ImageryClient(object):
         elif self._seg_cv is None:
             self._seg_cv = cv.CloudVolume(
                 self.segmentation_source,
-                mip=self._base_segmentation_mip,
                 use_https=True,
                 fill_missing=True,
                 bounded=False,
