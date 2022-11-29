@@ -3,6 +3,11 @@
 This project attempts to follow [Semantic Versioning](https://semver.org) and uses [Keep-a-Changelog formatting](https://keepachangelog.com/en/1.0.0/).
 But I make mistakes sometimes.
 
+## [1.0.1] - 2022-11-28
+### Fixed
+
+- By default, the client will adopt the lowest mip level (i.e. highest resolution data) that is not labeled as a placeholder in the cloudvolume info.
+
 ## [1.0.0] - 2022-11-27
 ### Added
 
