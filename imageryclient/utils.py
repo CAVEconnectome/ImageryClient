@@ -202,3 +202,27 @@ def get_first(masks):
         return list(masks.values())[0]
     else:
         return masks[0]
+
+
+def segmentation_masks(seg_img, include_null_root=False):
+    """Convert a segmentation array into a dict of binary masks for each root id.
+
+    Parameters
+    ----------
+    seg_img : numpy.ndarray
+        Array with voxel values corresponding to the object id at that voxel
+    include_null_root : bool, optional
+        Create a mask for 0 id, which usually denotes no object, by default False
+
+    Returns
+    -------
+    dict
+        Dict of binary masks. Keys are root ids, values are boolean n-d arrays with a 1 where that object is.
+    """
+    split_segmentation = {}
+    for root_id in np.unique(seg_img):
+        if include_null_root is False:
+            if root_id == 0:
+                continue
+        split_segmentation[root_id] = (seg_img == root_id).astype(int)
+    return split_segmentation

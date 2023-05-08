@@ -259,6 +259,9 @@ def composite_overlay(segs,
         Image or list of composite overlay images, optionally overlaid over provided imagery. List or single image
         is determined based on segmentation arrays being 2 or 3 dimensional.
     """
+    if isinstance(segs, np.ndarray):
+        segs = utils.segmentation_masks(segs)
+
     if colors is None:
         colors = discrete_colors(segs, palette, h, l, s)
 

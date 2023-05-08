@@ -3,6 +3,11 @@
 This project attempts to follow [Semantic Versioning](https://semver.org) and uses [Keep-a-Changelog formatting](https://keepachangelog.com/en/1.0.0/).
 But I make mistakes sometimes.
 
+## [1.0.2] - 2022-11-28
+### Fixed
+- Fixed bug in `save_imagery`.
+- `composite_overlay` can take arrays and not just masks.
+
 ## [1.0.1] - 2022-11-28
 ### Fixed
 
@@ -12,7 +17,7 @@ But I make mistakes sometimes.
 ### Added
 
 - Richer integration of specified resolution, to take advantage of better Cloudvolume support for resolutions.
-- Split apart the notion of bounding box dimensions from image dimensions. See bbox_size vs image_size in teh readme.
+- Split apart the notion of bounding box dimensions from image dimensions. See bbox_size vs image_size in the readme.
 - Vastly improved configuration by a CAVEclient
 ### Fixed
 
