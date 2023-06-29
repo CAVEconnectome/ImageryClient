@@ -3,6 +3,13 @@
 This project attempts to follow [Semantic Versioning](https://semver.org) and uses [Keep-a-Changelog formatting](https://keepachangelog.com/en/1.0.0/).
 But I make mistakes sometimes.
 
+## [1.0.3] - 2023-06-29
+### Fixed
+- Better segmentation cutout behavior when specifying a list of segment ids.
+
+### Changed
+- Segmentation cutouts are returned as int64 array if it is safe to do so. Can be turned off by setting `convert_to_int64` argument to `False`.
+
 ## [1.0.2] - 2022-11-28
 ### Fixed
 - Fixed bug in `save_imagery`.

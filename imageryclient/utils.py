@@ -226,3 +226,12 @@ def segmentation_masks(seg_img, include_null_root=False):
                 continue
         split_segmentation[root_id] = (seg_img == root_id).astype(int)
     return split_segmentation
+
+
+def safe_to_convert_uint64(val):
+  """Returns True if the uint64 value is safe to convert to an int64, False otherwise."""
+  max_int64 = 2**64 - 1
+  if np.any(val > max_int64):
+    return False
+  else:
+    return True

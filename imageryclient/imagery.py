@@ -421,6 +421,7 @@ class ImageryClient(object):
         resolution=None,
         timestamp=None,
         scale_to_bounds=None,
+        convert_to_int64=True,
     ):
         """Get a cutout of the segmentation imagery for some or all root ids between set bounds.
         Note that if all root ids are requested in a large region, it could take a long time to query
@@ -447,7 +448,10 @@ class ImageryClient(object):
             Timestamp to use for dynamic segmentation data
         scale_to_bounds : bool or None, optional
             If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
-
+        convert_to_int64 : bool, optional
+            If True, converts segmentation data to int64 from uint64 if it is safe to do so. Default is True.
+            If not safe, raises a warning and does not convert from uint64.
+            
         Returns
         -------
         numpy.ndarray
@@ -497,9 +501,15 @@ class ImageryClient(object):
                         mip=mip,
                         coord_resolution=resolution,
                         timestamp=timestamp,
+                        agglomerate=False,
                     )
                 )
             )
+        if convert_to_int64:
+            if utils.safe_to_convert_uint64(seg):
+                seg = seg.astype(np.int64)
+            else:
+                raise Warning('Could not convert to int64 because values are too large. Returning as uint64.')
 
         if scale_to_bounds:
             return utils.rescale_to_bounds(
@@ -577,6 +587,7 @@ class ImageryClient(object):
         resolution=None,
         timestamp=None,
         scale_to_bounds=None,
+        convert_to_int64=True,
     ):
 
         """Download aligned and scaled imagery and segmentation data at a given resolution.
@@ -610,7 +621,9 @@ class ImageryClient(object):
             Timestamp to use for dynamic segmentation data
         scale_to_bounds : bool or None, optional
             If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.
-
+        convert_to_int64 : bool, optional
+            If True, converts segmentation data to int64 from uint64 if it is safe to do so. Default is True.
+            If not safe, raises a warning and does not convert from uint64.
 
         Returns
         -------
@@ -661,6 +674,7 @@ class ImageryClient(object):
                 resolution=resolution,
                 timestamp=timestamp,
                 scale_to_bounds=scale_to_bounds_seg,
+                convert_to_int64=convert_to_int64,
             )
             seg_shape = seg.shape
         else:
