@@ -3,6 +3,7 @@ numpy
 cloud-volume >= 8.0.0
 caveclient
 Pillow
+scikit-image
 fastremap
 tqdm
 imageio

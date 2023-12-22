@@ -3,18 +3,19 @@ from PIL import Image
 from . import utils
 from seaborn import husl_palette, hls_palette, color_palette
 
-DEFAULT_PALETTE = 'husl'
+DEFAULT_PALETTE = "husl"
 DEFAULT_H = 0.01
 DEFAULT_L = 0.65
 DEFAULT_S = 1.0
 
 
-def discrete_colors(segs,
-                    palette=DEFAULT_PALETTE,
-                    h=DEFAULT_H,
-                    l=DEFAULT_L,
-                    s=DEFAULT_S,
-                    ):
+def discrete_colors(
+    segs,
+    palette=DEFAULT_PALETTE,
+    h=DEFAULT_H,
+    l=DEFAULT_L,
+    s=DEFAULT_S,
+):
     """Generate discrete colors for segmentations from a palette
     generator. Defaults to perceptually uniform differences with
     high saturation.
@@ -38,9 +39,9 @@ def discrete_colors(segs,
     List or dict
         List or dict with one color per segmentation.
     """
-    if palette == 'husl':
+    if palette == "husl":
         colors = husl_palette(len(segs), h=h, s=s, l=l)
-    elif palette == 'hls':
+    elif palette == "hls":
         colors = hls_palette(len(segs), h=h, s=s, l=l)
     else:
         colors = color_palette(n_colors=len(segs), palette=palette)
@@ -49,7 +50,7 @@ def discrete_colors(segs,
     return colors
 
 
-def stack_images(images, direction='horizontal', spacing=10):
+def stack_images(images, direction="horizontal", spacing=10):
     """Stack an iterable of images either veritcally or horizontally
 
     Parameters
@@ -66,13 +67,12 @@ def stack_images(images, direction='horizontal', spacing=10):
     Image.Image
         Combined grid of images
     """
-    if direction == 'horizontal':
+    if direction == "horizontal":
         return _stack_horizontal(images, spacing=spacing)
-    elif direction == 'vertical':
+    elif direction == "vertical":
         return _stack_vertical(images, spacing=spacing)
     else:
-        raise ValueError(
-            'Direction must be either "horizontal" or "vertical".')
+        raise ValueError('Direction must be either "horizontal" or "vertical".')
 
 
 def _stack_horizontal(images, spacing=5):
@@ -92,10 +92,10 @@ def _stack_horizontal(images, spacing=5):
     """
     images = [utils.convert_to_rgba(i) for i in images]
     h = np.max([i.height for i in images])
-    ws = np.cumsum([0]+[i.width + spacing for i in images])
-    w = ws[-1]-spacing
+    ws = np.cumsum([0] + [i.width + spacing for i in images])
+    w = ws[-1] - spacing
 
-    img = Image.new('RGB', (w, h), (255, 255, 255, 255))
+    img = Image.new("RGB", (w, h), (255, 255, 255, 255))
     for i, wd in zip(images, ws):
         img.paste(i, (wd, 0))
     return img
@@ -118,24 +118,25 @@ def _stack_vertical(images, spacing=10):
     """
     images = [utils.convert_to_rgba(i) for i in images]
     w = np.max([i.width for i in images])
-    hs = np.cumsum([0]+[i.height + spacing for i in images])
-    h = hs[-1]-spacing
-    img = Image.new('RGB', (w, h), (255, 255, 255, 255))
+    hs = np.cumsum([0] + [i.height + spacing for i in images])
+    h = hs[-1] - spacing
+    img = Image.new("RGB", (w, h), (255, 255, 255, 255))
     for i, h in zip(images, hs):
         img.paste(i, (0, h))
     return img
 
 
-def _composite_overlay_single(masks,
-                              colors,
-                              alpha=0.2,
-                              imagery=None,
-                              outline=False,
-                              merge_outline=True,
-                              overlap=True,
-                              width=10,
-                              side='out',
-                              ):
+def _composite_overlay_single(
+    masks,
+    colors,
+    alpha=0.2,
+    imagery=None,
+    outline=False,
+    merge_outline=True,
+    overlap=True,
+    width=10,
+    side="out",
+):
     """Make a colored composite overlay from an iterable of 2d masks.
 
     Parameters
@@ -179,16 +180,14 @@ def _composite_overlay_single(masks,
 
     frames = []
     for mask, color in zip(masks, colors):
-        dat = (np.array(mask) > 0)*255
-        frame = Image.fromarray(np.squeeze(dat).T.astype('uint8'))
+        dat = (np.array(mask) > 0) * 255
+        frame = Image.fromarray(np.squeeze(dat).T.astype("uint8"))
         if outline:
-            frame = utils.binary_seg_outline(
-                frame, width, side=side)
-        frame = utils.colorize_bw(frame, new_color=color,
-                                  new_alpha=alpha, background=0)
+            frame = utils.binary_seg_outline(frame, width, side=side)
+        frame = utils.colorize_bw(frame, new_color=color, new_alpha=alpha, background=0)
         frames.append(frame)
 
-    composite_frames = Image.new('RGBA', size=frames[0].size)
+    composite_frames = Image.new("RGBA", size=frames[0].size)
     for f in frames:
         if overlap is False:
             _, _, _, a = np.array(composite_frames).T
@@ -198,10 +197,9 @@ def _composite_overlay_single(masks,
     if outline and merge_outline:
         all_mask = np.zeros(np.array(masks[0]).shape)
         for mask in masks:
-            all_mask = all_mask + np.array(mask > 0).astype('int')
-        all_mask = Image.fromarray(255*all_mask.astype('uint8').T)
-        all_mask = utils.binary_seg_outline(
-            all_mask, width, side=side)
+            all_mask = all_mask + np.array(mask > 0).astype("int")
+        all_mask = Image.fromarray(255 * all_mask.astype("uint8").T)
+        all_mask = utils.binary_seg_outline(all_mask, width, side=side)
         composite_frames = utils.mask_image(composite_frames, all_mask)
 
     if imagery is not None:
@@ -211,21 +209,22 @@ def _composite_overlay_single(masks,
         return composite_frames
 
 
-def composite_overlay(segs,
-                      colors=None,
-                      alpha=0.2,
-                      imagery=None,
-                      outline=False,
-                      merge_outline=True,
-                      overlap=True,
-                      width=10,
-                      side='out',
-                      dim=2,
-                      palette=DEFAULT_PALETTE,
-                      h=DEFAULT_H,
-                      l=DEFAULT_L,
-                      s=DEFAULT_S,
-                      ):
+def composite_overlay(
+    segs,
+    colors=None,
+    alpha=0.2,
+    imagery=None,
+    outline=False,
+    merge_outline=True,
+    overlap=True,
+    width=10,
+    side="out",
+    dim=2,
+    palette=DEFAULT_PALETTE,
+    h=DEFAULT_H,
+    l=DEFAULT_L,
+    s=DEFAULT_S,
+):
     """Make a colored composite overlay for a 3d mask from an iterable of masks.
 
     Parameters
@@ -269,30 +268,31 @@ def composite_overlay(segs,
     if n_dim > 2:
         n_frames = utils.get_first(segs).shape[dim]
     else:
-        return _composite_overlay_single(segs,
-                                         colors,
-                                         alpha=alpha,
-                                         imagery=imagery,
-                                         outline=outline,
-                                         merge_outline=merge_outline,
-                                         overlap=overlap,
-                                         width=width,
-                                         side=side,
-                                         )
+        return _composite_overlay_single(
+            segs,
+            colors,
+            alpha=alpha,
+            imagery=imagery,
+            outline=outline,
+            merge_outline=merge_outline,
+            overlap=overlap,
+            width=width,
+            side=side,
+        )
 
     overlay_images = []
     for ii in range(n_frames):
-        frame_masks, frame_imagery = utils.flatten_data(
-            ii, segs, imagery, dim)
-        img = _composite_overlay_single(frame_masks,
-                                        colors,
-                                        alpha=alpha,
-                                        imagery=frame_imagery,
-                                        outline=outline,
-                                        merge_outline=merge_outline,
-                                        overlap=overlap,
-                                        width=width,
-                                        side=side,
-                                        )
+        frame_masks, frame_imagery = utils.flatten_data(ii, segs, imagery, dim)
+        img = _composite_overlay_single(
+            frame_masks,
+            colors,
+            alpha=alpha,
+            imagery=frame_imagery,
+            outline=outline,
+            merge_outline=merge_outline,
+            overlap=overlap,
+            width=width,
+            side=side,
+        )
         overlay_images.append(img)
     return overlay_images

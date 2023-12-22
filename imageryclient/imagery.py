@@ -34,7 +34,6 @@ def bounds_from_center(ctr, width=1, height=1, depth=1):
     return np.array([xl, xh])
 
 
-
 def save_image_slices(
     filename_prefix,
     filename_suffix,
@@ -161,14 +160,16 @@ class ImageryClient(object):
         else:
             self._base_imagery_mip = image_mip
         if segmentation_mip is None:
-            self._base_segmentation_mip = utils._get_lowest_nonplaceholder(self.segmentation_cv)        
+            self._base_segmentation_mip = utils._get_lowest_nonplaceholder(
+                self.segmentation_cv
+            )
         else:
             self._base_segmentation_mip = segmentation_mip
 
     def _configure_resolution(self, resolution):
         if resolution is None:
             resolution = "image"
-        
+
         if isinstance(resolution, str):
             if resolution in ["image", "segmentation"]:
                 if resolution == "image":
@@ -176,20 +177,23 @@ class ImageryClient(object):
                         raise ValueError(
                             "Cannot set resolution from imagery if not being used"
                         )
-                    self._resolution = np.array(self.image_cv.mip_resolution(self._base_imagery_mip))
+                    self._resolution = np.array(
+                        self.image_cv.mip_resolution(self._base_imagery_mip)
+                    )
                 elif resolution == "segmentation":
                     if self._use_segmentation is None:
                         raise ValueError(
                             "Cannot set resolution from segmentation if not being used"
                         )
-                    self._resolution = np.array(self.segmentation_cv.mip_resolution(self._base_segmentation_mip))
+                    self._resolution = np.array(
+                        self.segmentation_cv.mip_resolution(self._base_segmentation_mip)
+                    )
             else:
                 raise ValueError(
                     'Base resolution must be set by the client, array-like, "image" or "segmentation"'
                 )
         else:
             self._resolution = np.array(resolution)
-
 
     @property
     def token(self):
@@ -451,7 +455,7 @@ class ImageryClient(object):
         convert_to_int64 : bool, optional
             If True, converts segmentation data to int64 from uint64 if it is safe to do so. Default is True.
             If not safe, raises a warning and does not convert from uint64.
-            
+
         Returns
         -------
         numpy.ndarray
@@ -509,7 +513,9 @@ class ImageryClient(object):
             if utils.safe_to_convert_uint64(seg):
                 seg = seg.astype(np.int64)
             else:
-                raise Warning('Could not convert to int64 because values are too large. Returning as uint64.')
+                raise Warning(
+                    "Could not convert to int64 because values are too large. Returning as uint64."
+                )
 
         if scale_to_bounds:
             return utils.rescale_to_bounds(

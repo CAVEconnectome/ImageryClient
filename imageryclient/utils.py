@@ -1,18 +1,32 @@
 import re
 import numpy as np
-from functools import partial
+from skimage import transform
 from scipy import ndimage
 from PIL import Image
 
-def rescale_to_bounds(img, bbox):
-    img = np.atleast_3d(img)
-    img_shape = np.array(img.shape)
+def rescale_to_bounds(image, bbox):
+    """
+    Rescales the given image to fit within the specified bounding box.
+
+    Parameters:
+        image (numpy.ndarray): The input image to be rescaled.
+        bbox (cloudvolume.BoundingBox): The bounding box defining the desired output shape.
+
+    Returns:
+        numpy.ndarray: The rescaled image.
+
+    """
+    image = np.atleast_3d(image)
     bbox_shape = np.array(bbox.maxpt - bbox.minpt)
-    zoom_scale = bbox_shape / img_shape
-    return ndimage.zoom(img, zoom_scale, mode="nearest", order=0).squeeze()
+    return transform.resize(
+        image,
+        output_shape=bbox_shape,
+        order=0,
+    ).squeeze()
+
 
 def is_precomputed(path):
-    if re.search(r'^precomputed://', path) is None:
+    if re.search(r"^precomputed://", path) is None:
         return False
     else:
         return True
@@ -23,17 +37,19 @@ def _get_lowest_nonplaceholder(cv, ph_text="placeholder"):
         if cv.mip_key(ii) != ph_text:
             return ii
     else:
-        raise ValueError(f'All MIP levels for {cv.base_cloudpath} are labeled as placeholder')
+        raise ValueError(
+            f"All MIP levels for {cv.base_cloudpath} are labeled as placeholder"
+        )
+
 
 def _grayscale_to_pil(img, four_channel=False):
-    """Helper function to convert one channel uint8 image data to RGB for saving.
-    """
+    """Helper function to convert one channel uint8 image data to RGB for saving."""
     img = img.astype(np.uint8).T
     if four_channel is True:
         sc = 4
     else:
         sc = 3
-    pil_img = np.dstack(sc*[img.squeeze()[:, :, np.newaxis]])
+    pil_img = np.dstack(sc * [img.squeeze()[:, :, np.newaxis]])
     return pil_img
 
 
@@ -55,7 +71,7 @@ def _binary_mask_to_transparent_pil(img, color=None):
 
 
 def _grayscale_to_rgba(img):
-    """Convert an rgba 
+    """Convert an rgba
 
     Parameters
     ----------
@@ -72,9 +88,9 @@ def _grayscale_to_rgba(img):
 
 def convert_to_rgba(img):
     if isinstance(img, Image.Image):
-        return img.convert('RGBA')
+        return img.convert("RGBA")
     else:
-        return Image.fromarray(img.T).convert('RGBA')
+        return Image.fromarray(img.T).convert("RGBA")
 
 
 def convert_to_array(img):
@@ -88,7 +104,7 @@ def colors_to_uint8(clrs):
     return [[int(255 * ii) for ii in c] for c in clrs]
 
 
-def binary_seg_outline(seg, width, side='out', color=None, alpha=1):
+def binary_seg_outline(seg, width, side="out", color=None, alpha=1):
     """Convert a 2d image segmentation to a binary outline inside or outside the segmentation
 
     Parameters
@@ -111,13 +127,11 @@ def binary_seg_outline(seg, width, side='out', color=None, alpha=1):
     """
     seg = convert_to_array(seg)
     bseg = seg > 0
-    if side == 'out':
-        seg_new = ndimage.binary_dilation(
-            bseg, iterations=int(width), border_value=0)
+    if side == "out":
+        seg_new = ndimage.binary_dilation(bseg, iterations=int(width), border_value=0)
         seg_new[bseg] = 0
     else:
-        seg_cut = ndimage.binary_erosion(
-            bseg, iterations=int(width), border_value=1)
+        seg_cut = ndimage.binary_erosion(bseg, iterations=int(width), border_value=1)
         bseg[seg_cut] = 0
         seg_new = bseg
     if color is None:
@@ -181,7 +195,7 @@ def colorize_bw(img, new_color, new_alpha=1, background=0, background_alpha=0):
     r[one_inds] = new_color[0]
     g[one_inds] = new_color[1]
     b[one_inds] = new_color[2]
-    return Image.fromarray(np.stack([r.T, g.T, b.T, a.T], axis=2).astype('uint8'))
+    return Image.fromarray(np.stack([r.T, g.T, b.T, a.T], axis=2).astype("uint8"))
 
 
 def flatten_data(ii, masks, imagery, dim):
@@ -229,9 +243,9 @@ def segmentation_masks(seg_img, include_null_root=False):
 
 
 def safe_to_convert_uint64(val):
-  """Returns True if the uint64 value is safe to convert to an int64, False otherwise."""
-  max_int64 = 2**64 - 1
-  if np.any(val > max_int64):
-    return False
-  else:
-    return True
+    """Returns True if the uint64 value is safe to convert to an int64, False otherwise."""
+    max_int64 = 2**64 - 1
+    if np.any(val > max_int64):
+        return False
+    else:
+        return True
