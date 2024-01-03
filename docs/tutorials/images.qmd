@@ -162,7 +162,7 @@ For example, we can download the data around [this view of the MICRoNs mouse vis
 
 ```python
 from caveclient import CAVEclient
-client = CAVEclient('minnie65_public_v343') .  # Note that you have to set up a token for this to work, see below.
+client = CAVEclient('minnie65_public') .  # Note that you have to set up a token for this to work, see below.
 
 img_client = ic.ImageryClient(client=client)
 
