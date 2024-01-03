@@ -1,7 +1,8 @@
 project:
   title: "ImageryClient"
   type: website
-
+  output-dir: docs
+  
 website:
   title: "ImageryClient"
   page-navigation: true
