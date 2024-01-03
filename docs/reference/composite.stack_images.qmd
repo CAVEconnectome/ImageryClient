@@ -1,0 +1,19 @@
+# composite.stack_images { #imageryclient.composite.stack_images }
+
+`composite.stack_images(images, direction='horizontal', spacing=10)`
+
+Stack an iterable of images either veritcally or horizontally
+
+## Parameters
+
+| Name        | Type                   | Description                                              | Default        |
+|-------------|------------------------|----------------------------------------------------------|----------------|
+| `images`    | list - like            | Iterable of Image.Image objects                          | _required_     |
+| `spacing`   | int                    | Spacing between images in pixels, by default 10          | `10`           |
+| `direction` | horizontal or vertical | Direction of the grid of images, by default 'horizontal' | `'horizontal'` |
+
+## Returns
+
+| Type                      | Description             |
+|---------------------------|-------------------------|
+| PIL.Image.PIL.Image.Image | Combined grid of images |

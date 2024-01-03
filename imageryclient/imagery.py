@@ -34,7 +34,6 @@ def bounds_from_center(ctr, width=1, height=1, depth=1):
     return np.array([xl, xh])
 
 
-
 def save_image_slices(
     filename_prefix,
     filename_suffix,
@@ -73,32 +72,24 @@ class ImageryClient(object):
 
     Parameters
     ----------
+    client : caveclient.CAVEclient or None, optional
+        A pre-initialized CAVEclient to use for configuration.
+        If used, the image source and segmentation source come from the info service values.
+    resolution : array-like or 'image' or 'segmentation', optional
+        Sets the voxel resolution that bounds will be entered in, by default 'image', which is the mip 0 resolution of the imagery.
+    segmentation : bool, optional
+        If False, no segmentation cloudvolume is initialized. By default True
+    imagery : bool, optional
+        If False, no imagery cloudvolume is initialized. By default True
     image_source : str, optional
         CloudVolume path to an imagery source, by default None
     segmentation_source : str, optional
         CloudVolume path to a segmentation source, by default None
-    datastack_name : str, optional
-        Datastack name to lookup information for in the InfoService, by default None
-    server_address : str, optional
-        Address of an InfoService host, by default None. If none, uses defaults in
-        the CAVEclient.
-    base_resolution : array-like or 'image' or 'segmentation', optional
-        Sets the voxel resolution that bounds will be entered in, by default 'image'.
-        Literal resolutions will be followed, while "image" or "segmentation" use the
-        mip 0 values of the associated cloudvolumes.
-    table_name : str, optional
-        Name of the chunkedgraph table (if used), by default None
     image_mip : int, optional
         Default mip level to use for imagery lookups, by default 0. Note that the same mip
         level for imagery and segmentation can correspond to different voxel resolutions.
     segmentation_mip : int, optional
         Default mip level to use for segmentation lookups, by default 0.
-    segmentation : bool, optional
-        If False, no segmentation cloudvolume is initialized. By default True
-    imagery : bool, optional
-        If False, no imagery cloudvolume is initialized. By default True
-    framework_client : caveclient.CAVEclient, optional
-        A pre-initialized Framework client to be used instead of initializing a new one.
     auth_token : str or None, optional
         Auth token to use for cloudvolume. If None, uses the default values from the CAVEclient. Default is None.
     timestamp : datetime.datetime or None,
@@ -119,7 +110,6 @@ class ImageryClient(object):
         auth_token=None,
         timestamp=None,
     ):
-
         self._image_source = image_source
         self._segmentation_source = segmentation_source
 
@@ -161,14 +151,16 @@ class ImageryClient(object):
         else:
             self._base_imagery_mip = image_mip
         if segmentation_mip is None:
-            self._base_segmentation_mip = utils._get_lowest_nonplaceholder(self.segmentation_cv)        
+            self._base_segmentation_mip = utils._get_lowest_nonplaceholder(
+                self.segmentation_cv
+            )
         else:
             self._base_segmentation_mip = segmentation_mip
 
     def _configure_resolution(self, resolution):
         if resolution is None:
             resolution = "image"
-        
+
         if isinstance(resolution, str):
             if resolution in ["image", "segmentation"]:
                 if resolution == "image":
@@ -176,20 +168,23 @@ class ImageryClient(object):
                         raise ValueError(
                             "Cannot set resolution from imagery if not being used"
                         )
-                    self._resolution = np.array(self.image_cv.mip_resolution(self._base_imagery_mip))
+                    self._resolution = np.array(
+                        self.image_cv.mip_resolution(self._base_imagery_mip)
+                    )
                 elif resolution == "segmentation":
                     if self._use_segmentation is None:
                         raise ValueError(
                             "Cannot set resolution from segmentation if not being used"
                         )
-                    self._resolution = np.array(self.segmentation_cv.mip_resolution(self._base_segmentation_mip))
+                    self._resolution = np.array(
+                        self.segmentation_cv.mip_resolution(self._base_segmentation_mip)
+                    )
             else:
                 raise ValueError(
                     'Base resolution must be set by the client, array-like, "image" or "segmentation"'
                 )
         else:
             self._resolution = np.array(resolution)
-
 
     @property
     def token(self):
@@ -285,17 +280,17 @@ class ImageryClient(object):
 
         Parameters
         ----------
-            image_size: list-like
-                Image size in pixels (2-element) or voxels (3-element)
-            mip: int or None, optional
-                Mip for which the image would be computed. Defaults to None, which uses the client default.
-            resolution: list-like or None, optional.
-                Resolution to use for the bbox_size. Defaults to None, or the client defauls.
+        image_size: list-like
+            Image size in pixels (2-element) or voxels (3-element)
+        mip: int or None, optional
+            Mip for which the image would be computed. Defaults to None, which uses the client default.
+        resolution: list-like or None, optional.
+            Resolution to use for the bbox_size. Defaults to None, or the client defauls.
 
         Returns
         -------
-            tuple:
-                Argument for bbox_size that would give the desired pixel dimensions.
+        tuple:
+            Argument for bbox_size that would give the desired pixel dimensions.
         """
         if mip is None:
             mip = self._base_imagery_mip
@@ -312,17 +307,17 @@ class ImageryClient(object):
 
         Parameters
         ----------
-            image_size: list-like
-                Image size in pixels (2-element) or voxels (3-element)
-            mip: int or None, optional
-                Mip for which the image would be computed. Defaults to None, which uses the client default.
-            resolution: list-like or None, optional.
-                Resolution to use for the bbox_size. Defaults to None, or the client defauls.
+        image_size: list-like
+            Image size in pixels (2-element) or voxels (3-element)
+        mip: int or None, optional
+            Mip for which the image would be computed. Defaults to None, which uses the client default.
+        resolution: list-like or None, optional.
+            Resolution to use for the bbox_size. Defaults to None, or the client defauls.
 
         Returns
         -------
-            tuple:
-                Argument for bbox_size that would give the desired pixel dimensions.
+        tuple:
+            Argument for bbox_size that would give the desired pixel dimensions.
         """
 
         if mip is None:
@@ -451,7 +446,7 @@ class ImageryClient(object):
         convert_to_int64 : bool, optional
             If True, converts segmentation data to int64 from uint64 if it is safe to do so. Default is True.
             If not safe, raises a warning and does not convert from uint64.
-            
+
         Returns
         -------
         numpy.ndarray
@@ -509,7 +504,9 @@ class ImageryClient(object):
             if utils.safe_to_convert_uint64(seg):
                 seg = seg.astype(np.int64)
             else:
-                raise Warning('Could not convert to int64 because values are too large. Returning as uint64.')
+                raise Warning(
+                    "Could not convert to int64 because values are too large. Returning as uint64."
+                )
 
         if scale_to_bounds:
             return utils.rescale_to_bounds(
@@ -589,7 +586,6 @@ class ImageryClient(object):
         scale_to_bounds=None,
         convert_to_int64=True,
     ):
-
         """Download aligned and scaled imagery and segmentation data at a given resolution.
 
         Parameters

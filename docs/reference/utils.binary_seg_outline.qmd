@@ -1,0 +1,21 @@
+# utils.binary_seg_outline { #imageryclient.utils.binary_seg_outline }
+
+`utils.binary_seg_outline(seg, width, side='out', color=None, alpha=1)`
+
+Convert a 2d image segmentation to a binary outline inside or outside the segmentation
+
+## Parameters
+
+| Name    | Type               | Description                                                 | Default    |
+|---------|--------------------|-------------------------------------------------------------|------------|
+| `seg`   | PIL image or array | one-channel PIL Image or 2d array representing image values | _required_ |
+| `width` | int                | Width of outline in pixels                                  | _required_ |
+| `side`  | out or 'in'        | Whether outline is inside or outside the segmentation mask  | `'out'`    |
+| `color` | list or None       | RGB color for masked values (0-255) or None for white.      | `None`     |
+| `alpha` | float              | 0-1 value for transparency.                                 | `1`        |
+
+## Returns
+
+| Type                          | Description        |
+|-------------------------------|--------------------|
+| PIL.PIL.Image.PIL.Image.Image | Image with outline |

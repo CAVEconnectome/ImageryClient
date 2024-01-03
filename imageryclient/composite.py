@@ -230,7 +230,7 @@ def composite_overlay(segs,
 
     Parameters
     ----------
-    masks : list-like or dict
+    segs: list-like or dict
         Iterable of masked images of the same size. If a dict, colors must be a dict as well.
     colors : list-like, dict, or None
         Iterable of RGB colors of the same size as masks. If a dict, masks must also be a dict and colors

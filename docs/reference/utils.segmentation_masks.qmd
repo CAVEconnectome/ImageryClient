@@ -1,0 +1,18 @@
+# utils.segmentation_masks { #imageryclient.utils.segmentation_masks }
+
+`utils.segmentation_masks(seg_img, include_null_root=False)`
+
+Convert a segmentation array into a dict of binary masks for each root id.
+
+## Parameters
+
+| Name                | Type                | Description                                                               | Default    |
+|---------------------|---------------------|---------------------------------------------------------------------------|------------|
+| `seg_img`           | numpy.numpy.ndarray | Array with voxel values corresponding to the object id at that voxel      | _required_ |
+| `include_null_root` | bool                | Create a mask for 0 id, which usually denotes no object, by default False | `False`    |
+
+## Returns
+
+| Type   | Description                                                                                           |
+|--------|-------------------------------------------------------------------------------------------------------|
+| dict   | Dict of binary masks. Keys are root ids, values are boolean n-d arrays with a 1 where that object is. |
