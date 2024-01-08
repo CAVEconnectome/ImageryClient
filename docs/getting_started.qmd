@@ -46,5 +46,5 @@ image, segs = img_client.image_and_segmentation_cutout(bounds,
 ic.composite_overlay(segs, imagery=image)
 ```
 
-![overlay 0](../example_images/seg_overlay_0.png)
+![Expected imagery overlay from the code above](example_images/seg_overlay_0.png)
 

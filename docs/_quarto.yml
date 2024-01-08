@@ -54,7 +54,6 @@ quartodoc:
     - title: Utilities
       desc: Additional utility functions for working with imagery and segmentation data.
       contents:
-      - utils.rescale_to_bounds
       - utils.binary_seg_outline
       - utils.mask_image
       - utils.segmentation_masks

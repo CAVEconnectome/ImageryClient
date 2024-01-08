@@ -24,7 +24,6 @@ Additional utility functions for working with imagery and segmentation data.
 
 | | |
 | --- | --- |
-| [utils.rescale_to_bounds](utils.rescale_to_bounds.qmd#imageryclient.utils.rescale_to_bounds) |  |
 | [utils.binary_seg_outline](utils.binary_seg_outline.qmd#imageryclient.utils.binary_seg_outline) | Convert a 2d image segmentation to a binary outline inside or outside the segmentation |
 | [utils.mask_image](utils.mask_image.qmd#imageryclient.utils.mask_image) | Apply mask as a a transparency layer to seg |
 | [utils.segmentation_masks](utils.segmentation_masks.qmd#imageryclient.utils.segmentation_masks) | Convert a segmentation array into a dict of binary masks for each root id. |

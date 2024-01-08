@@ -13,7 +13,7 @@ Segmentations must be either a list or a dict, such as comes out of split segmen
 ```python
 ic.composite_overlay(segs, imagery=image)
 ```
-![overlay 0](../example_images/seg_overlay_0.png)
+![Segmentation overlay with default colors](../example_images/seg_overlay_0.png)
 
 ### Aesthetic options
 
@@ -24,7 +24,7 @@ Alpha is similarly easy to set.
 ic.composite_overlay(segs, imagery=image, palette='tab10', alpha=0.4)
 ```
 
-![overlay 1](../example_images/seg_overlay_1.png)
+![Segmentation overlay with specified color palette](../example_images/seg_overlay_1.png)
 
 Colors can also be specified in the same form as the segmentations, e.g. a dictionary of root id to RGB tuple.
 
@@ -34,7 +34,7 @@ colors = {2282: (0,1,1), # cyan
 ic.composite_overlay(segs, imagery=image, colors=colors)
 ```
 
-![overlay 2](../example_images/seg_overlay_2.png)
+![Segmentation overlay with specified mapping between object id and color](../example_images/seg_overlay_2.png)
 
 ### Outline options
 
@@ -46,7 +46,7 @@ The default option puts the outlines along the outside of the segmentations, but
 ic.composite_overlay(segs, imagery=image, outline=True, alpha=0.5, width=15, colors=colors)
 ```
 
-![outline 0](../example_images/seg_outline_0.png)
+![Segmentation overlay using outlines instead of filled regions](../example_images/seg_outline_0.png)
 
 Outlines can also be put inside of the segmentation and width can be specified.
 Additionally, setting `merge_outline` to False will not omit outlines in places where segmentations touch.
@@ -63,7 +63,7 @@ ic.composite_overlay(segs,
                      colors=colors)
 ```
 
-![outline 1](../example_images/seg_outline_1.png)
+![Segmentation overlay using distinct (unmerged) outlines](../example_images/seg_outline_1.png)
 
 ## 3d Image Stacks
 
@@ -87,7 +87,7 @@ overlays = ic.composite_overlay(segs, imagery=image, alpha=0.3, width=3,
 overlays[0]
 ```
 
-![Series 0](../example_images/seg_series_0.png)
+![One element of a series of stacked images](../example_images/seg_series_0.png)
 
 In order to quickly assemble sequential images into a series, we can stack them.
 A `direction` argument will let you specify `vertical` instead of the default, and spacing can be adjusted as well.
@@ -96,4 +96,4 @@ A `direction` argument will let you specify `vertical` instead of the default, a
 ic.stack_images(overlays)
 ```
 
-![Series 1](../example_images/seg_series_full.png)
+![Series of cutouts from consecutive z-sections](../example_images/seg_series_full.png)
