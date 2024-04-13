@@ -245,7 +245,7 @@ ctr = [5019, 8677, 1211]
 width = 100
 z_slices = 3
 
-bounds_3d = ic.bounds_from_center(ctr, delx=width, dely=width, delz=z_slices)
+bounds_3d = ic.bounds_from_center(ctr, width=width, height=width, depth=z_slices)
 
 image, segs = img_client.image_and_segmentation_cutout(bounds_3d, split_segmentations=True)
 
