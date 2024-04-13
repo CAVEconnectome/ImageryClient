@@ -146,11 +146,16 @@ class ImageryClient(object):
             self._resolution = client.info.viewer_resolution()
 
     def _configure_mip_levels(self, image_mip, segmentation_mip):
-        if image_mip is None:
+        if self._use_imagery is False:
+            self._base_imagery_mip = -1
+        elif image_mip is None:
             self._base_imagery_mip = utils._get_lowest_nonplaceholder(self.image_cv)
         else:
             self._base_imagery_mip = image_mip
-        if segmentation_mip is None:
+
+        if self._use_segmentation is False:
+            self._base_segmentation_mip = -1
+        elif segmentation_mip is None:
             self._base_segmentation_mip = utils._get_lowest_nonplaceholder(
                 self.segmentation_cv
             )
