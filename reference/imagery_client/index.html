@@ -1,0 +1,3070 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://caveconnectome.github.io/ImageryClient/reference/imagery_client/">
+      
+      
+        <link rel="prev" href="../../overlays/">
+      
+      
+        <link rel="next" href="../composite_overlays/">
+      
+      
+      <link rel="icon" href="../../images/logo-cleanest.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Imagery Client - ImageryClient</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:300,300i,400,400i,700,700i%7CInconsolata:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Bitter";--md-code-font:"Inconsolata"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#imageryclient.imagery.ImageryClient" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ImageryClient" class="md-header__button md-logo" aria-label="ImageryClient" data-md-component="logo">
+      
+  <img src="../../images/logo-cleanest.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ImageryClient
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Imagery Client
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/CAVEconnectome/ImageryClient/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    CAVEconnectome/ImageryClient
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  ImageryClient
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting_started/" class="md-tabs__link">
+          
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+    
+  
+  Function Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ImageryClient" class="md-nav__button md-logo" aria-label="ImageryClient" data-md-component="logo">
+      
+  <img src="../../images/logo-cleanest.png" alt="logo">
+
+    </a>
+    ImageryClient
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/CAVEconnectome/ImageryClient/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    CAVEconnectome/ImageryClient
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ImageryClient
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../getting_started/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Function Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Function Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Imagery Client
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Imagery Client
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ImageryClient
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" ImageryClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_cv" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;image_cv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;image_source
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;resolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_cv" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;segmentation_cv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;segmentation_source
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_and_segmentation_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;image_and_segmentation_cutout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_bbox_size_from_dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;image_bbox_size_from_dimensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;image_cutout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.save_image_and_segmentation_masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;save_image_and_segmentation_masks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.save_imagery" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;save_imagery
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.save_segmentation_masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;save_segmentation_masks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_bbox_size_from_dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;segmentation_bbox_size_from_dimensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;segmentation_cutout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.split_segmentation_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;split_segmentation_cutout
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imageryclient.imagery.bounds_from_center" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;bounds_from_center
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imageryclient.imagery.save_image_slices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;save_image_slices
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../composite_overlays/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Composite Overlays
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ImageryClient
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" ImageryClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_cv" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;image_cv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;image_source
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;resolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_cv" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;segmentation_cv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;segmentation_source
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_and_segmentation_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;image_and_segmentation_cutout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_bbox_size_from_dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;image_bbox_size_from_dimensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.image_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;image_cutout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.save_image_and_segmentation_masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;save_image_and_segmentation_masks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.save_imagery" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;save_imagery
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.save_segmentation_masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;save_segmentation_masks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_bbox_size_from_dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;segmentation_bbox_size_from_dimensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.segmentation_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;segmentation_cutout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imageryclient.imagery.ImageryClient.split_segmentation_cutout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;split_segmentation_cutout
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imageryclient.imagery.bounds_from_center" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;bounds_from_center
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imageryclient.imagery.save_image_slices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;save_image_slices
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Imagery Client</h1>
+
+<p>Basic imagery client features</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="imageryclient.imagery.ImageryClient" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ImageryClient</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segmentation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">imagery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">image_source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segmentation_source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segmentation_mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">auth_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>object</code></p>
+
+  
+      <p>Tool to help download imagery and segmentation data.</p>
+<p>Can either take explicit cloudvolume paths for imagery and segmentation or use the Info Service to look up the right paths.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>client</code></td>
+          <td>
+                <code><span title="caveclient.CAVEclient">CAVEclient</span> or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A pre-initialized CAVEclient to use for configuration and authentication.
+If used, image source, segmentation source, and resolution come from the info service values.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>array - like or image or segmentation</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Sets the voxel resolution that bounds will be entered in, by default 'image', which is the mip 0 resolution of the imagery.
+Note that if a client is used to set the sources, the resolution will be set to the client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>segmentation</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If False, no segmentation cloudvolume is initialized. By default True</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>imagery</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If False, no imagery cloudvolume is initialized. By default True</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_source</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>CloudVolume path to an imagery source, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>segmentation_source</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>CloudVolume path to a segmentation source, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Default mip level to use for imagery lookups, by default 0. Note that the same mip
+level for imagery and segmentation can correspond to different voxel resolutions.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>segmentation_mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Default mip level to use for segmentation lookups, by default 0.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>auth_token</code></td>
+          <td>
+                <code>str or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Auth token to use for cloudvolume. If None, uses the default values from the CAVEclient. Default is None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>timestamp</code></td>
+          <td>
+                <code>(<span title="datetime.datetime">datetime</span> or None)</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Fixed timestamp to use for segmentation lookups. If None, defaults to the present time
+when each function is run. Default is None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.image_cv" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">image_cv</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Imagery CloudVolume</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.image_source" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">image_source</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Image cloudpath</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.resolution" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">resolution</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The voxel resolution assumed when locations are used for the client.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>X, y, and z voxel resolution.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.segmentation_cv" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">segmentation_cv</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Segmentation CloudVolume object</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.segmentation_source" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">segmentation_source</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Segmentation cloudpath</p>
+  </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.image_and_segmentation_cutout" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">image_and_segmentation_cutout</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">image_mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segmentation_mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root_ids</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">resize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">split_segmentations</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_null_root</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bbox_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_to_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convert_to_int64</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Download aligned and scaled imagery and segmentation data at a given resolution.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bounds</code></td>
+          <td>
+                <code>2x3 list of ints</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A list of the lower and upper bound point for the cutout. The units are voxels in the resolution set by the
+base_resolution parameter.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mip level of the imagery if something other than the default is wanted, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>segmentation_mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mip level of the segmentation if something other than the default is wanted, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>root_ids</code></td>
+          <td>
+                <code>list, None, or 'all'</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If a list, the segmentation cutout only includes voxels for a specified set of root ids.
+If None, default to the supervoxel ids. If 'all', finds all root ids corresponding to the supervoxels
+in the cutout and get all of them. By default 'all'.</p>
+            </div>
+          </td>
+          <td>
+                <code>'all'</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resize</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, upscale the lower resolution cutout to the same resolution of the higher one (either imagery or segmentation).</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>split_segmentations</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, the segmentation is returned as a dict of masks (using split_segmentation_cutout), and if False returned as
+an array with root_ids (using segmentation_cutout), by default False</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>include_null_root</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bbox_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+as the center.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>list - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>timestamp</code></td>
+          <td>
+                <code>datetime or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Timestamp to use for dynamic segmentation data</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale_to_bounds</code></td>
+          <td>
+                <code>bool or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>convert_to_int64</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, converts segmentation data to int64 from uint64 if it is safe to do so. Default is True.
+If not safe, raises a warning and does not convert from uint64.</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="cloudvolume.VolumeCutout">VolumeCutout</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Imagery volume cutout</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a> or dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Segmentation volume cutout as either an ndarray or dict of masks depending on the split_segmentations flag.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.image_bbox_size_from_dimensions" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">image_bbox_size_from_dimensions</span><span class="p">(</span><span class="n">image_size</span><span class="p">,</span> <span class="n">mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the bbox_size equivalent for an imagery cutout with specified pixel dimensions</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>image_size</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Image size in pixels (2-element) or voxels (3-element)</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mip</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mip for which the image would be computed. Defaults to None, which uses the client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Resolution to use for the bbox_size. Defaults to None, or the client defauls.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>tuple</code></td>          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Argument for bbox_size that would give the desired pixel dimensions.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.image_cutout" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">image_cutout</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">bbox_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_to_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get an image cutout for a certain location or set of bounds and a mip level.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bounds</code></td>
+          <td>
+                <code>array</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Either a 2x3 array of a lower bound and upper bound point to bound the cutout in units of voxels in a resolution set by
+the base_resolution parameter. Alternatively, if bbox_size or image_size is set, bounds should be a 3-element array specifying the center of the
+field of view.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bbox_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, bbox_size is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+as the center.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mip level of imagery to get if something other than the default is wanted, by default None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>list - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale_to_bounds</code></td>
+          <td>
+                <code>bool, optional.</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>    cloudvolume.VolumeCutout</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An n-d image of the image requested with image intensity values as the elements.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.save_image_and_segmentation_masks" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">save_image_and_segmentation_masks</span><span class="p">(</span><span class="n">filename_prefix</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segmentation_mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root_ids</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">include_null_root</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">segmentation_colormap</span><span class="o">=</span><span class="p">{},</span> <span class="n">resize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">precomputed_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slice_axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bbox_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_to_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Save aligned and scaled imagery and segmentation mask cutouts as pngs. Kwargs are passed to imageio.imwrite.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>filename_prefix</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Prefix for the segmentation filenames. The full filename will be either {filename_prefix}<em root_id="root_id">root_id</em>.png
+or {filename_prefix}<em root_id="root_id">root_id</em>.png, depending on if multiple slices of each root id are saved.}_{i</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bounds</code></td>
+          <td>
+                <code>2x3 list of ints</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A list of the lower and upper bound point for the cutout. The units are voxels in the resolution set by the
+base_resolution parameter. Only used if a precomputed data is not passed. By default, None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Only used if a precomputed data is not passed. Mip level of imagery to get if something other than the default
+is wanted, by default None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>segmentation_mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Only used if precomputed data is not passed. Mip level of segmentation to get if something other than the default
+is wanted, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>root_ids</code></td>
+          <td>
+                <code>list, None, or 'all'</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If a list, the segmentation cutout only includes voxels for a specified set of root ids.
+If None, default to the supervoxel ids. If 'all', finds all root ids corresponding to the supervoxels
+in the cutout and get all of them. By default 'all'.</p>
+            </div>
+          </td>
+          <td>
+                <code>'all'</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>include_null_root</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, includes root id of 0, which is usually reserved for a null segmentation value. By default, False.</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>segmentation_colormap</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dict of root ids to an uint8 RGB color triplet (0-255) or RGBa quadrooplet to optionally color the mask png. Any root id not specified
+will be rendered in white. Color triplets default to full opacity. Default is an empty dictionary.</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resize</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, upscale the lower resolution cutout to the same resolution of the higher one (either imagery or segmentation).</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>precomputed_data</code></td>
+          <td>
+                <code>tuple</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Already computed tuple with imagery and segmentation mask data, in that order. If not provided, bounds must be given to download
+cutout data. By default, None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>slice_axis</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If the image data is truly 3 dimensional, determines which axis to use to save serial images, by default 2 (i.e. z-axis)</p>
+            </div>
+          </td>
+          <td>
+                <code>2</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bbox_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+as the center.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>list - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Voxel resolution of the bounds provided. If not provided, uses the client defaults.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>timestamp</code></td>
+          <td>
+                <code>datetime</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Timestamp to use for the segmentation. If not provided, defaults to the client defaults.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale_to_bounds</code></td>
+          <td>
+                <code>bool or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.save_imagery" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">save_imagery</span><span class="p">(</span><span class="n">filename_prefix</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precomputed_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slice_axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bbox_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_to_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Save queried or precomputed imagery to png files.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>filename_prefix</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Prefix for the imagery filename. The full filename will be {filename_prefix}_imagery.png</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bounds</code></td>
+          <td>
+                <code>2x3 list of ints</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A list of the lower and upper bound point for the cutout. The units are voxels in the resolution set by the
+base_resolution parameter. Only used if a precomputed image is not passed. By default, None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Only used if a precomputed image is not passed. Mip level of imagery to get if something other than the default
+is wanted, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>precomputed_image</code></td>
+          <td>
+                <code><span title="cloudvolume.VolumeCutout">VolumeCutout</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Already downloaded VolumeCutout data to save explicitly. If called this way, the bounds and mip arguments will not apply.
+If a precomputed image is not provided, bounds must be specified to download the cutout data. By default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>slice_axis</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If the image data is truly 3 dimensional, determines which axis to use to save serial images, by default 2 (i.e. z-axis)</p>
+            </div>
+          </td>
+          <td>
+                <code>2</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bbox_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+as the center.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>list - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale_to_bounds</code></td>
+          <td>
+                <code>bool or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>verbose</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, prints the progress, by default False</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.save_segmentation_masks" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">save_segmentation_masks</span><span class="p">(</span><span class="n">filename_prefix</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root_ids</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">precomputed_masks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segmentation_colormap</span><span class="o">=</span><span class="p">{},</span> <span class="n">slice_axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">include_null_root</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bbox_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_to_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Save queried or precomputed segmentation masks to png files. Additional kwargs are passed to imageio.imwrite.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>filename_prefix</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Prefix for the segmentation filenames. The full filename will be either {filename_prefix}<em root_id="root_id">root_id</em>.png
+or {filename_prefix}<em root_id="root_id">root_id</em>.png, depending on if multiple slices of each root id are saved.}_{i</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bounds</code></td>
+          <td>
+                <code>2x3 list of ints</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A list of the lower and upper bound point for the cutout. The units are voxels in the resolution specified.
+Only used if a precomputed segmentation is not passed. By default, None.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Only used if a precomputed segmentation is not passed. Mip level of segmentation to get if something other than the default
+is wanted, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>root_ids</code></td>
+          <td>
+                <code>list, None, or 'all'</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If a list, the segmentation cutout only includes voxels for a specified set of root ids.
+If None, default to the supervoxel ids. If 'all', finds all root ids corresponding to the supervoxels
+in the cutout and get all of them. By default 'all'.</p>
+            </div>
+          </td>
+          <td>
+                <code>'all'</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>precomputed_masks</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Already downloaded dict of mask data to save explicitly. If called this way, the bounds and mip arguments will not apply.
+If precomputed_masks are not provided, bounds must be given to download cutout data. By default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>segmentation_colormap</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dict of root ids to an uint8 RGB color triplet (0-255) or RGBa quadrooplet to optionally color the mask png. Any root id not specified
+will be rendered in white. Color triplets default to full opacity. Default is an empty dictionary.</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>slice_axis</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If the image data is truly 3 dimensional, determines which axis to use to save serial images, by default 2 (i.e. z-axis)</p>
+            </div>
+          </td>
+          <td>
+                <code>2</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>include_null_root</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bbox_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, bbox_size is a 3 element array of ints giving the dimensions of the cutout. In this case, bounds is treated
+as the center.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>list - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>timestamp</code></td>
+          <td>
+                <code>datetime or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Timestamp to use for dynamic segmentation data</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale_to_bounds</code></td>
+          <td>
+                <code>bool or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.segmentation_bbox_size_from_dimensions" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">segmentation_bbox_size_from_dimensions</span><span class="p">(</span><span class="n">image_size</span><span class="p">,</span> <span class="n">mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the bbox_size equivalent for an segmentation cutout with specified pixel dimensions</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>image_size</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Image size in pixels (2-element) or voxels (3-element)</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mip</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mip for which the image would be computed. Defaults to None, which uses the client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Resolution to use for the bbox_size. Defaults to None, or the client defauls.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>tuple</code></td>          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Argument for bbox_size that would give the desired pixel dimensions.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.segmentation_cutout" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">segmentation_cutout</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">root_ids</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">bbox_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_to_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convert_to_int64</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get a cutout of the segmentation imagery for some or all root ids between set bounds.
+Note that if all root ids are requested in a large region, it could take a long time to query
+all supervoxels.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bounds</code></td>
+          <td>
+                <code>2x3 list of ints</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A list of the lower and upper bound point for the cutout. The units are voxels in the resolution set by the
+base_resolution parameter.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>root_ids</code></td>
+          <td>
+                <code>list, None, or 'all'</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If a list, only compute the voxels for a specified set of root ids. If None, default to the supervoxel ids. If 'all',
+find all root ids corresponding to the supervoxels in the cutout and get all of them. None, by default 'all'</p>
+            </div>
+          </td>
+          <td>
+                <code>'all'</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bbox_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, bbox_size is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+as the center.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mip level of the segmentation if something other than the defualt is wanted, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>list - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>timestamp</code></td>
+          <td>
+                <code>datetime or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Timestamp to use for dynamic segmentation data</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale_to_bounds</code></td>
+          <td>
+                <code>bool or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>convert_to_int64</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, converts segmentation data to int64 from uint64 if it is safe to do so. Default is True.
+If not safe, raises a warning and does not convert from uint64.</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Array whose elements correspond to the root id (or, if root_ids=None, the supervoxel id) at each voxel.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="imageryclient.imagery.ImageryClient.split_segmentation_cutout" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">split_segmentation_cutout</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">root_ids</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">include_null_root</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bbox_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_to_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generate segmentation cutouts with a single binary mask for each root id, organized as a dict with keys as root ids and masks as values.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bounds</code></td>
+          <td>
+                <code>2x3 list of ints</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A list of the lower and upper bound point for the cutout. The units are voxels in the resolution set by the
+base_resolution parameter.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>root_ids</code></td>
+          <td>
+                <code>list, None, or 'all'</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If a list, only compute the voxels for a specified set of root ids. If None, default to the supervoxel ids. If 'all',
+find all root ids corresponding to the supervoxels in the cutout and get all of them. None, by default 'all'</p>
+            </div>
+          </td>
+          <td>
+                <code>'all'</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>include_null_root</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, includes root id of 0, which is usually reserved for a null segmentation value. Default is False.</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bbox_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, bbox_size is a 3 element array of ints giving the dimensions. In this case, bounds is treated
+as the center.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>image_size</code></td>
+          <td>
+                <code>array or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If not None, indicates the size of the image desired in pixels. Cannot be set with bbox_size, since it has potentially conficting information.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mip</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mip level of the segmentation if something other than the default is wanted, by default None</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td>
+                <code>list - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Voxel resolution used when specifying bounds bounds and bbox_size (but not image_size). If none, defaults to client default.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>timestamp</code></td>
+          <td>
+                <code>datetime or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Timestamp to use for dynamic segmentation data</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale_to_bounds</code></td>
+          <td>
+                <code>bool or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, rescales image to the same size as the bounds. Default is None, which rescales if mip is not set but otherwise does not.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Dict whose keys are root ids and whose values are the binary mask for that root id, with a 1 where the object contains the voxel.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imageryclient.imagery.bounds_from_center" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">bounds_from_center</span><span class="p">(</span><span class="n">ctr</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generate bounds from a center point and dimensions for each direction</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ctr</code></td>
+          <td>
+                <code>array - like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>x,y,z coordinates of the center of the bounds in voxel dimensions.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>width</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Width of the box in the x direction in.
+Default is 1.</p>
+            </div>
+          </td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>height</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Height of the box in the y direction.
+Default is 1.</p>
+            </div>
+          </td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>depth</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Depth of the box in the z direction.
+Default is 1.</p>
+            </div>
+          </td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>array</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>2x3 array of lower and upper bounds (in that order).</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imageryclient.imagery.save_image_slices" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">save_image_slices</span><span class="p">(</span><span class="n">filename_prefix</span><span class="p">,</span> <span class="n">filename_suffix</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">slice_axis</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Helper function for generic image saving</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../overlays/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Generating Overlays">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Generating Overlays
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../composite_overlays/" class="md-footer__link md-footer__link--next" aria-label="Next: Composite Overlays">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Composite Overlays
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.sections", "navigation.footer", "navigation.prune", "toc.follow", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>
