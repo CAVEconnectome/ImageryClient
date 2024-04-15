@@ -1,5 +1,0 @@
-# imagery.save_image_slices { #imageryclient.imagery.save_image_slices }
-
-`imagery.save_image_slices(filename_prefix, filename_suffix, img, slice_axis, image_type, verbose=False, color=None, **kwargs)`
-
-Helper function for generic image saving

@@ -1,4 +1,0 @@
-# utils.rescale_to_bounds { #imageryclient.utils.rescale_to_bounds }
-
-`utils.rescale_to_bounds(img, bbox)`
-

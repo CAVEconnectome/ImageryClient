@@ -73,10 +73,11 @@ class ImageryClient(object):
     Parameters
     ----------
     client : caveclient.CAVEclient or None, optional
-        A pre-initialized CAVEclient to use for configuration.
-        If used, the image source and segmentation source come from the info service values.
+        A pre-initialized CAVEclient to use for configuration and authentication.
+        If used, image source, segmentation source, and resolution come from the info service values.
     resolution : array-like or 'image' or 'segmentation', optional
         Sets the voxel resolution that bounds will be entered in, by default 'image', which is the mip 0 resolution of the imagery.
+        Note that if a client is used to set the sources, the resolution will be set to the client default.
     segmentation : bool, optional
         If False, no segmentation cloudvolume is initialized. By default True
     imagery : bool, optional
