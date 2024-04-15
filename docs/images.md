@@ -35,7 +35,7 @@ from PIL import Image
 Image.fromarray(image.T)
 ```
 
-![A 2d image cutout at full resolution specified by bounds](../example_images/img_base.png)
+![A 2d image cutout at full resolution specified by bounds](images/img_base.png)
 
 Since often we are using analysis points to center an image on, we can alternatively define a center point and the width/height/depth of the bounding box (in voxels).
 The same image could be achived from this specification.
@@ -83,7 +83,7 @@ image = img_client.image_cutout(bounds, mip=3)
 Image.fromarray(image.T)
 ```
 
-![Imagery at MIP 3 resolution within specific bounds](../example_images/scaled_mip_3.png)
+![Imagery at MIP 3 resolution within specific bounds](images/scaled_mip_3.png)
 
 And using specified pixel dimensions:
 ```python
@@ -92,7 +92,7 @@ image = img_client.image_cutout(ctr, mip=3, image_size=img_size)
 Image.fromarray(image.T)
 ```
 
-![Imagery at MIP 3 with the specified image size](../example_images/exact_mip_3.png)
+![Imagery at MIP 3 with the specified image size](images/exact_mip_3.png)
 
 You can also use the `scale_to_bounds=True` argument to upscale an image to the size specified in the bounding box, equivalent to having one pixel for each voxel as measured by the resolution parameter.
 
@@ -110,7 +110,7 @@ import numpy as np
 Image.fromarray( (seg.T / np.max(seg) * 255).astype('uint8') )
 ```
 
-![Segmentation of all objects within bounds](../example_images/seg_base.png)
+![Segmentation of all objects within bounds](images/seg_base.png)
 
 Specific root ids can also be specified. All pixels outside those root ids have a value of 0.
 
@@ -120,7 +120,7 @@ seg = img_client.segmentation_cutout(bounds, root_ids=root_ids)
 Image.fromarray( (seg.T / np.max(seg) * 255).astype('uint8') )
 ```
 
-![segmentation of specific objects within bounds](../example_images/seg_specific.png)
+![segmentation of specific objects within bounds](images/seg_specific.png)
 
 
 ### Split segmentations
@@ -133,7 +133,7 @@ split_seg = img_client.split_segmentation_cutout(bounds, root_ids=root_ids)
 Image.fromarray((split_seg[ root_ids[0] ].T * 255).astype('uint8'))
 ```
 
-![A single object's segmentation mask from the dictionary of segmentation masks.](../example_images/seg_single.png)
+![A single object's segmentation mask from the dictionary of segmentation masks.](images/seg_single.png)
 
 ### Aligned cutouts
 
@@ -176,6 +176,6 @@ image, segs = img_client.image_and_segmentation_cutout(ctr,
 
 ic.composite_overlay(segs, imagery=image, palette='husl')
 ```
-![Example segmentation cutout from the MICrONs dataset](../example_images/microns_example.png)
+![Example segmentation cutout from the MICrONs dataset](images/microns_example.png)
 
 Note that the following code requires setting up a CAVE token to access the server. [See here for details](https://github.com/AllenInstitute/MicronsBinder/blob/master/notebooks/mm3_intro/CAVEsetup.ipynb).

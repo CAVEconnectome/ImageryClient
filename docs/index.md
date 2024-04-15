@@ -1,12 +1,11 @@
 ---
 title: "ImageryClient"
 
-about:
-  template: broadside
-  image: example_images/code_to_picture.png
-
+hide:
+  - navigation
+  - toc
 ---
-
+![](images/code_to_picture.png){: style="width:50%" align=left}
 Connectomics data often involves a combination of microscopy imagery and segmentation, labels of distinct objects applied to this imagery.
 While exploring the data in tools like [Neuroglancer](https://github.com/google/neuroglancer) is great, a common task is often to make figures overlaying 2d images and segmentation sliced from the larger data.
 ImageryClient is designed to make it easy to generate aligned cutouts from imagery and segmentation, and make it efficient to produce attractive, publication-ready overlay images.

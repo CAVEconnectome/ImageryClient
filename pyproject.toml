@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "imageryclient"
+dynamic = ["version"]
+description = "Front end tools for composite images for EM connectomics"
+readme = "README.md"
+license = ""
+authors = [
+    { name = "Casey Schneider-Mizell", email = "caseysm@gmail.com" },
+]
+dependencies = [
+    "caveclient",
+    "cloud-volume >= 8.0.0",
+    "fastremap",
+    "imageio",
+    "numpy",
+    "Pillow",
+    "scipy",
+    "seaborn",
+    "tqdm",
+]
+
+[project.urls]
+Homepage = "https://github.com/ceesem/ImageryClient"
+
+[tool.hatch.version]
+path = "imageryclient/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/imageryclient",
+]
+
+[tool.hatch.envs.docs]
+python = "3.11"
+dependencies = [
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "mkdocs-glightbox",
+    "mkdocs-caption",
+]
+
+[tool.hatch.envs.docs.scripts]
+docs_test = "mkdocs serve -v"
+build = "mkdocs build"
